@@ -14,13 +14,6 @@ class order_model extends order_model_base
 	{
 		parent::__construct();
 	}
-
-	public function __destruct()
-	{
-		parent::__destruct();
-		unset($this);
-	}
-
 	//取得订单列表
 	function get_list($condition='',$offset=0,$psize=20)
 	{
@@ -216,6 +209,25 @@ class order_model extends order_model_base
         $sql = "DELETE FROM ".$this->db->prefix."order_log WHERE order_id=".intval($id);
         $this->db->query($sql);
         return true;
+    }
+    //导入数据查询
+    public function get_import_list($condition='',$var=true)
+    {
+        $sql = "SELECT o.*";
+        if($var){
+            $sql.=",p.catename,p.brand,p.title,p.qty";
+        }
+        $sql.=",a.fullname,a.idcard,a.idcard_front,a.mobile,a.province,a.city,a.county,a.address";
+        $sql.= " FROM ".$this->db->prefix."order o ";
+        if($var){
+            $sql.= "LEFT JOIN ".$this->db->prefix."order_product p ON(o.id=p.order_id) ";
+        }
+        $sql.= "LEFT JOIN ".$this->db->prefix."order_address a ON(o.id=a.order_id) ";
+        if($condition){
+            $sql .= "WHERE ".$condition." ";
+        }
+        $sql.= "ORDER BY o.id DESC";
+        return $this->db->get_all($sql);
     }
 }
 

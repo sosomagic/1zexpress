@@ -853,5 +853,98 @@ class order_control extends dsy_control
         $this->assign('rs',$rs);
         $this->view("edit_note");
     }
+    //数据导出操作
+    public function exportOrder_f()
+    {
+        $ids = $this->get("ids");
+        $condition = "o.id in(".$ids.") and o.user_id=".$this->session->val('user_id');
+        $rslist = $this->model('order')->get_import_list($condition);
+        if(!$rslist)
+        {
+            error('没有查询到要导出的运单',$this->url("order"),"error");
+        }
+        //重组数组
+        $temp_arr = array();
+        foreach($rslist as $k=>&$e){
+            $sn=&$e['sn'];
+            if(!isset($temp_arr[$sn])){
+                $temp_arr[$sn]=$e;
+                unset($temp_arr[$sn]['brand'],$temp_arr[$sn]['title'],$temp_arr[$sn]['qty'],$temp_arr[$sn]['catename']);
+            }
+            $temp_arr[$sn]['brand'][]= htmlspecialchars_decode($e['brand'],ENT_QUOTES);
+            $temp_arr[$sn]['title'][]= htmlspecialchars_decode($e['title'],ENT_QUOTES);
+            $temp_arr[$sn]['qty'][]= $e['qty'];
+            $temp_arr[$sn]['catename'][]= $e['catename'];
+        }
+        $rslist=array_values($temp_arr);
+        unset($temp_arr);
+        $first_list = array("sn"=>"订单号","express_sn"=>"转运单号","addtime"=>"创建时间","idcard"=>"身份证号",
+            "catename"=>"货物品类","consignor"=>"发件人姓名","consignor_tel"=>"发件人电话","fullname"=>"收件人姓名",
+            "mobile"=>"收件人电话","address"=>"收件人地址","package_title"=>"内件汇总","idcardStatus"=>"身份证状态",
+            "status"=>"包裹状态","jingzhong"=>"包裹重量","pay_weight"=>"仓库复重","batchNo"=>"提单号");
+        $ext = array_keys($first_list);
+        include_once $this->dir_root."extension/phpexcel/PHPExcel.php";
+        @set_time_limit(0);#[设置防止超时]
+        $phpexcel = new PHPExcel();
+        $row = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+        $filename = date("Ymd-His");
+        $idlist = $ext;
+        $row_array = explode(",",$row);
+        $width_array = array();
+        $ifpic = false;
+        $list = $tmplist = array();
+        foreach($idlist AS $key=>$value)
+        {
+            $char = $row_array[$key];
+            $phpexcel->getActiveSheet()->getColumnDimension($char)->setWidth("18");
+            $list[$char] = $value;
+            $val = $first_list[$value];
+            $phpexcel->getActiveSheet()->getStyle($char."1")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $phpexcel->getActiveSheet()->getStyle($char."1")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            $phpexcel->getActiveSheet()->setCellValueExplicit($char."1",$val,PHPExcel_Cell_DataType::TYPE_STRING);
+        }
+        //现在存储内容数据
+        $i=0;
+        foreach($rslist AS $key=>$value)
+        {
+            $m = $i+2;
+            //if($ifpic) $this->set_height($m,"80");
+            foreach($list AS $k=>$v)
+            {
+                $val = $value[$v];  //对应数据库字段
+                if($v=='addtime'){
+                    $val = date("Y-m-d H:i:s",$v);
+                }
+                if($v =='address'){
+                    $val = $value['province']." ".$value['city']." ".$value['county']." ".$value['address'];
+                }
+                if($v =='package_title'){
+                    $arr_packages = array();
+                    foreach($value['title'] as $a=>$b){
+                        $arr_packages[] = $value['brand'][$a].$b.'*'.$value['qty'][$a];
+                    }
+                    $val = implode(",",$arr_packages);
+                }
+                if($v=='idcardStatus' && $value['idcard_front']){
+                    $val = "身份证已经上传";
+                }
+                if($v=='status'){
+                    $statusList = $this->model('order')->status_list();
+                    $val = $statusList[$value[$v]];
+                }
+                $char = $k."".$m;
+                $phpexcel->getActiveSheet()->getStyle($char)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $phpexcel->getActiveSheet()->getStyle($char)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $phpexcel->getActiveSheet()->setCellValueExplicit($char,$val,PHPExcel_Cell_DataType::TYPE_STRING);
+            }
+            $i++;
+        }
+        $phpexcel->createSheet();
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$filename.'.xls"');
+        header('Cache-Control: max-age=0');
+        $XLS_W = PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
+        $XLS_W->save('php://output');
+    }
 }
 ?>

@@ -1718,9 +1718,9 @@ class order_control extends dsy_control
             if(!$data['具体地址']){
                 $tips[] = "第".$i."行具体地址不能为空";
             }
-            if(!$data['收件人身份证号']){
+            /*if(!$data['收件人身份证号']){
                 $tips[] = "第".$i."行收件人身份证号不能为空";
-            }
+            }*/
             if(!$data['内件1品牌']){
                 $tips[] = "第".$i."行内件1品牌不能为空";
             }
@@ -1730,13 +1730,18 @@ class order_control extends dsy_control
             if(!$data['内件1数量']){
                 $tips[] = "第".$i."行内件1数量不能为空";
             }
+            $sn = $data['客户单号'] ? $data['客户单号'] : $this->model('order')->create_sn();
+            $rs = $this->model('order')->get_from_sn($sn);
+            if($rs){
+                $tips[] = "第".$i."行，单号[".$sn."]已存在，请查证后再导入";
+            }
             $type = trim($data['包裹类别']);
             $channel = $this->model('channel')->get_one($type,'type');
             if(!$channel){
-                $this->json(P_Lang("第".$i."行，请在后台渠道管理设置对应的包裹类别"));
+                $tips[] = "第".$i."行，请在后台渠道管理设置对应的包裹类别";
             }
             if(!$channel['status']){
-                $this->json(P_Lang("第".$i."行，请开启包裹类别对应的渠道"));
+                $tips[] = "第".$i."行，请开启包裹类别对应的渠道";
             }
             //导入清关编码
             if($channel['from_sn']){

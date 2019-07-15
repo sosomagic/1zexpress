@@ -104,6 +104,7 @@
                     <thead>
                     <tr>
                         <th class="bold">&nbsp;</th>
+                        <th class="bold text-center">序号</th>
                         <th class="bold text-center">运单号</th>
                         <th class="bold text-center">会员</th>
                         <th class="bold text-center">仓库/渠道</th>
@@ -137,6 +138,7 @@
                                 <span></span>
                             </label>
                         </td>
+                        <td class="text-center">{$key+1}</td>
                         <td class="text-center"><a href="{url ctrl=order func=info id=$value.id /}">{$value.sn}</a><br><a onclick="showtr('trshow{$key+1}','imgsrc{$key+1}');"><img id="imgsrc{$key+1}" src="tpl/www/images/arrow_down1.png"></a></td>
                         <td class="text-center"><!-- if $value.user -->{$value.user}<br>{$value.ucode}<!-- else -->游客<!-- /if --></td>
                         <td class="text-center">{$value.stock.title}<br>{$channel[$key]['title']}</td>
@@ -145,7 +147,9 @@
                         <td class="text-center">{$value.price}</td>
                         <td class="text-center">{$value.consignor}</td>
                         <td class="text-center">{$address[$key]['fullname']}<br>{$address[$key]['mobile']}</td>
-                        <td class="text-center">{if $address[$key]['idcard_front']<>''}<a href="javascript:address_idcard('{$address[$key][idcard_front]}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-正面"></a>{/if}{if $address[$key]['idcard_back']<>''}<a href="javascript:address_idcard('{$address[$key][idcard_back]}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-反面"></a>{else}<span class="font-red">无身份证照片</span>{/if}</td>
+                        <td class="text-center">
+                            {if $address[$key]['idcard'] && $address[$key]['idcard_front'] && $address[$key]['idcard_back']}<a href="javascript:address_idcard('{$address[$key][idcard_front]}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-正面"></a><a href="javascript:address_idcard('{$address[$key][idcard_back]}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-反面"></a>{elseif $address[$key]['idcard'] && (!$address[$key]['idcard_front'] || !$address[$key]['idcard_back'])}有号码，无照片{else}<span class="font-red">无身份证</span>{/if}
+                        </td>
                         <td class="text-center">{$value.track.note ? $value.track.note : $value.ext}</td>
                         <td class="text-center">
                             <!-- if $status == 'paid' || $status == 'shipped' || $status == 'received' -->
@@ -181,7 +185,7 @@
                         </td>
                     </tr>
                     <tr id="trshow{$key+1}" style="display:none">
-                        <td colspan="13" align="left">
+                        <td colspan="14" align="left">
                             <div class="modal_border">
                                 <b>总费用:</b>{$value.price}{$value.currency.title} | <b>价值:</b>{$value.val}{$value.currency.title} | <b>税费:</b>{$value.tax}{$value.currency.title} | <b>保价:</b>{$value.safe}{$value.currency.title} | <b>保费:</b>{$value.safe_price}{$value.currency.title} | <b>增值服务费:</b>{$value.custom_price}{$value.currency.title}
                             </div>

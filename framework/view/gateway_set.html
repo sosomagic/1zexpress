@@ -1,155 +1,137 @@
-<!-- inc:head -->
-<!-- inc:nav -->
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-<!-- BEGIN SIDEBAR -->
-<!-- inc:left -->
-<!-- END SIDEBAR -->
-<!-- BEGIN CONTENT -->
-<div class="page-content-wrapper">
-<!-- BEGIN CONTENT BODY -->
-<div class="page-content">
-<!-- BEGIN PAGE HEADER-->
-<!-- BEGIN PAGE BAR -->
-<div class="page-bar">
-    <ul class="page-breadcrumb">
-        <li>
-            <a href="{url ctrl=gateway/}" title="返回短信/邮箱设置">短信/邮箱</a>
-            <i class="fa fa-angle-right"></i>
-        </li>
-        <li>
-            <span>{$group.title}
-                &raquo; <!-- if $id -->编辑<!-- else -->添加新<!-- /if -->网关信息，当前使用的引挈是：<span class="red">{$extlist.title}</span></span>
-        </li>
-    </ul>
-</div>
-<form method="post" action="{url ctrl=gateway func=save/}" onsubmit="return check_gateway_set()">
-    <!-- if $id -->
-    <input type="hidden" name="id" id="id" value="{$id}" />
-    <!-- else -->
-    <input type="hidden" name="code" id="code" value="{$code}" />
-    <input type="hidden" name="type" id="type" value="{$type}" />
-    <!-- /if -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="portlet box grey">
-                <div class="portlet-title">
-                    <div class="caption">
-                        <i class="fa fa-bars"></i>网关设置</div>
-                    <div class="tools">
-                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
-                    </div>
-                </div>
-                <div class="portlet-body">
-                    <table class="table table-striped table-bordered table-hover">
-                        <tbody>
-                        <tr>
-                            <td class="text-right">名称：</td>
-                            <td><input id="title" name="title" type="text" value="{$rs.title}" style="width: 100%"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">启用：</td>
-                            <td><input id="status" name="status" type="checkbox" class="make-switch"  data-on-text="<i class='fa fa-check'></i>" data-off-text="<i class='fa fa-times'></i>" data-size="small" value="1"{if $rs.status} checked{/if}></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">默认：</td>
-                            <td><input id="is_default" name="is_default" type="checkbox" class="make-switch"  data-on-text="<i class='fa fa-check'></i>" data-off-text="<i class='fa fa-times'></i>" data-size="small" value="1"{if $rs.is_default} checked{/if}>
-                                <span class="help-block">设置此网关是否默认使用，一种类型的网关仅支持一个默认</span></td>
-                        </tr>
-                        <!-- loop from=$extlist.code key=$key value=$value -->
-                        <!-- php:$valinfo = $rs['ext'][$key] ? $rs['ext'][$key] : $value.default -->
-                        <tr>
-                            <td class="text-right">{$value.title}：</td>
-                            <td>
-                                <!-- if $value.type == 'radio' -->
-                                <div class="md-radio-inline">
-                                    <!-- loop from=$value.option key=$k value=$v -->
-                                    <div class="md-radio">
-                                        <input type="radio" id="{$code}_{$key}_{$k}" name="{$code}_{$key}" value="{$k}"{if $valinfo == $k} checked{/if} class="md-radiobtn">
-                                        <label for="{$code}_{$key}_{$k}">
-                                            <span></span>
-                                            <span class="check"></span>
-                                            <span class="box"></span> {$v} </label>
-                                    </div>
-                                    <!-- /loop -->
-                                </div>
-                                <!-- elseif $value.type == 'select' -->
-                                <select name="{$code}_{$key}" id="{$code}_{$key}">
-                                    <option value="">请选择…</option>
-                                    <!-- loop from=$value.option key=$k value=$v -->
-                                    <option value="{$k}"{if $valinfo == $k} selected{/if}>{$v}</option>
-                                    <!-- /loop -->
-                                </select>
-                                <!-- elseif $value.type == 'checkbox' -->
-                                <!-- php:$valinfo = $valinfo ? explode(',',$valinfo) : array() -->
-                                <div class="md-checkbox-inline">
-                                    <!-- loop from=$value.option key=$k value=$v -->
-                                    <div class="md-checkbox">
-                                        <input id="{$code}_{$k}" type="checkbox" name="{$code}_{$k}" value="{$k}"{if in_array($k,$valinfo)} checked{/if}>
-                                        <label for="{$code}_{$k}">
-                                            <span></span>
-                                            <span class="check"></span>
-                                            <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> {$v} </label>
-                                    </div>
-                                    <!-- /loop -->
-                                </div>
-                                <!-- elseif $value.type == 'password' -->
-                                <input type="password" id="{$code}_{$key}" name="{$code}_{$key}"  value="{$valinfo}" style="width: 100%" />
-                                <!-- else -->
-                                <!-- php:$input_name = $code.'_'.$key -->
-                                <!-- if $value.typebtn == 'file' -->
-                                {func form_edit $input_name $valinfo text form_btn=file&width=500}
-                                <!-- elseif $value.typebtn == 'image' -->
-                                {func form_edit $input_name $valinfo text form_btn=image&width=500}
-                                <!-- elseif $value.typebtn == 'video' -->
-                                {func form_edit $input_name $valinfo text form_btn=video&width=500}
-                                <!-- else -->
-                                <input type="text" id="{$code}_{$key}" name="{$code}_{$key}" value="{$valinfo}" style="width: 100%" />
-                                <!-- /if -->
-                                <!-- /if -->
-                                <span class="help-block">{$value.note}<!-- if $value.required == 'true' --> <span class="font-red">(此项必填)</span><!-- /if --></span></td>
-                        </tr>
-                        <!-- /loop -->
-                        <tr>
-                            <td class="text-right">排序：</td>
-                            <td><input id="taxis" name="taxis" value="{$rs.taxis}" style="width:100%;"/>
-                                <span class="help-block">值范围在0-255，越小越往前靠，默认为255</span></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">摘要：</td>
-                            <td>{func form_edit note $rs.note editor width=700&height=300&etype=simple&btn_image=1}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <button class="btn blue" type="submit">
-                <i class="fa fa-edit"></i>
-                提 交
-            </button>
-        </div>
-    </div>
-</form>
-</div>
-<!-- END CONTENT BODY -->
-</div>
-<!-- END CONTENT -->
-</div>
-<!-- END CONTAINER -->
-<script type="text/javascript">
-    function check_gateway_set()
-    {
-        var title = $("#title").val();
-        if(!title){
-            $.dialog.alert('名称不能为空');
-            return false;
-        }
-        return true;
-    }
-</script>
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=gateway/}" title="返回短信/邮箱设置">短信/邮箱</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>{$group.title}
+                &raquo; <!-- if $id -->编辑<!-- else -->添加新<!-- /if -->网关信息，当前使用的引挈是：<span class="red">{$extlist.title}</span></span>
+        </li>
+    </ul>
+</div>
+<form method="post" action="{url ctrl=gateway func=save/}" onsubmit="return check_gateway_set()">
+<!-- if $id -->
+<input type="hidden" name="id" id="id" value="{$id}" />
+<!-- else -->
+<input type="hidden" name="code" id="code" value="{$code}" />
+<input type="hidden" name="type" id="type" value="{$type}" />
+<!-- /if -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bars"></i>网关设置</div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <td class="text-right">名称：</td>
+                        <td><input id="title" name="title" type="text" value="{$rs.title}" class="form-control"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">启用：</td>
+                        <td><input id="status" name="status" type="checkbox" class="make-switch"  data-on-text="<i class='fa fa-check'></i>" data-off-text="<i class='fa fa-times'></i>" data-size="small" value="1"{if $rs.status} checked{/if}></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">默认：</td>
+                        <td><input id="is_default" name="is_default" type="checkbox" class="make-switch"  data-on-text="<i class='fa fa-check'></i>" data-off-text="<i class='fa fa-times'></i>" data-size="small" value="1"{if $rs.is_default} checked{/if}>
+                            <span class="help-block">设置此网关是否默认使用，一种类型的网关仅支持一个默认</span></td>
+                    </tr>
+                    <!-- loop from=$extlist.code key=$key value=$value -->
+                    <!-- php:$valinfo = $rs['ext'][$key] ? $rs['ext'][$key] : $value.default -->
+                    <tr>
+                        <td class="text-right">{$value.title}：</td>
+                        <td>
+                            <!-- if $value.type == 'radio' -->
+                            <div class="md-radio-inline">
+                                <!-- loop from=$value.option key=$k value=$v -->
+                                <div class="md-radio">
+                                    <input type="radio" id="{$code}_{$key}_{$k}" name="{$code}_{$key}" value="{$k}"{if $valinfo == $k} checked{/if} class="md-radiobtn">
+                                    <label for="{$code}_{$key}_{$k}">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> {$v} </label>
+                                </div>
+                                <!-- /loop -->
+                            </div>
+                            <!-- elseif $value.type == 'select' -->
+                            <select name="{$code}_{$key}" id="{$code}_{$key}">
+                                <option value="">请选择…</option>
+                                <!-- loop from=$value.option key=$k value=$v -->
+                                <option value="{$k}"{if $valinfo == $k} selected{/if}>{$v}</option>
+                                <!-- /loop -->
+                            </select>
+                            <!-- elseif $value.type == 'checkbox' -->
+                            <!-- php:$valinfo = $valinfo ? explode(',',$valinfo) : array() -->
+                            <div class="md-checkbox-inline">
+                                <!-- loop from=$value.option key=$k value=$v -->
+                                <div class="md-checkbox">
+                                    <input id="{$code}_{$k}" type="checkbox" name="{$code}_{$k}" value="{$k}"{if in_array($k,$valinfo)} checked{/if}>
+                                    <label for="{$code}_{$k}">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> {$v} </label>
+                                </div>
+                                <!-- /loop -->
+                            </div>
+                            <!-- elseif $value.type == 'password' -->
+                            <input type="password" id="{$code}_{$key}" name="{$code}_{$key}"  value="{$valinfo}" class="form-control"/>
+                            <!-- else -->
+                            <!-- php:$input_name = $code.'_'.$key -->
+                            <!-- if $value.typebtn == 'file' -->
+                            {func form_edit $input_name $valinfo text form_btn=file&width=500}
+                            <!-- elseif $value.typebtn == 'image' -->
+                            {func form_edit $input_name $valinfo text form_btn=image&width=500}
+                            <!-- elseif $value.typebtn == 'video' -->
+                            {func form_edit $input_name $valinfo text form_btn=video&width=500}
+                            <!-- else -->
+                            <input type="text" id="{$code}_{$key}" name="{$code}_{$key}" value="{$valinfo}" class="form-control"/>
+                            <!-- /if -->
+                            <!-- /if -->
+                            <span class="help-block">{$value.note}<!-- if $value.required == 'true' --> <span class="font-red">(此项必填)</span><!-- /if --></span></td>
+                    </tr>
+                    <!-- /loop -->
+                    <tr>
+                        <td class="text-right">排序：</td>
+                        <td><input id="taxis" name="taxis" value="{$rs.taxis}" class="form-control"/>
+                            <span class="help-block">值范围在0-255，越小越往前靠，默认为255</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">摘要：</td>
+                        <td>{func form_edit note $rs.note editor width=700&height=300&etype=simple&btn_image=1}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button class="btn blue" type="submit">
+            <i class="fa fa-edit"></i>
+            提 交
+        </button>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+    function check_gateway_set()
+    {
+        var title = $("#title").val();
+        if(!title){
+            $.dialog.alert('名称不能为空');
+            return false;
+        }
+        return true;
+    }
+</script>
 <!-- inc:foot -->

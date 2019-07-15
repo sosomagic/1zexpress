@@ -97,8 +97,8 @@
                     <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 收件人地址 </label>
             </div>
             <div class="md-checkbox">
-                <input type="checkbox" name="ext[]" id="ext_packages" value="packages" checked />
-                <label for="ext_packages">
+                <input type="checkbox" name="ext[]" id="ext_package_title" value="package_title" checked />
+                <label for="ext_package_title">
                     <span></span>
                     <span class="check"></span>
                     <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 内件汇总 </label>
@@ -110,7 +110,6 @@
                     <span class="check"></span>
                     <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 身份证状态 </label>
             </div>
-
             <div class="md-checkbox">
                 <input type="checkbox" name="ext[]" id="ext_status" value="status" checked />
                 <label for="ext_status">
@@ -195,7 +194,6 @@
     <div class="form-group col-md-2">
         <input class="form-control input-small" type="text" name="consignee_mobile" value="" placeholder="收件人手机" />
     </div>
-
 </div>
 <div class="row" style="margin-top: 30px;">
     <div class="col-md-12 text-center">

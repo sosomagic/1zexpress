@@ -1,0 +1,76 @@
+<?php if(!defined("DSAIYIN_SET")){exit("<h1>Access Denied</h1>");} ?><?php $this->assign("title","修改个人密码"); ?><?php $this->output("head_member","file"); ?>
+<?php $this->output("nav","file"); ?>
+<div class="page-container">
+    <?php $this->output("block_usercp","file"); ?>
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i>修改密码</div>
+                        </div>
+                        <div class="portlet-body">
+                            <form method="post" id="userinfo_password">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-right">旧密码：</td>
+                                        <td><input type="password" name="oldpass" id="oldpass" value=""
+style="width: 100%"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">新密码：</td>
+                                        <td><input type="password" name="newpass" id="newpass" value="" style="width: 100%"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">确认密码：</td>
+                                        <td><input type="password" name="chkpass" id="chkpass" value="" style="width: 100%"/></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn blue" type="submit">
+                                            <i class="fa fa-edit"></i>
+                                            提 交
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="note note-info" style="margin-top: 20px;">
+                                <h4 class="block fa fa-warning bold font-red"> 注意：</h4>
+                                <p>友情说明：请输入8-16位字符，至少包含数字、大小写字母、特殊字符。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#userinfo_password").submit(function(){
+            $(this).ajaxSubmit({
+                'type':'post',
+                'dataType':'json',
+                'url':api_url('usercp','passwd'),
+                'success':function(rs){
+                    if(rs.status == 'ok'){
+                        $.dialog.alert("您的密码更新成功",function(){
+                            $.dsy.reload();
+                        },'succeed');
+                    }else{
+                        $.dialog.alert(rs.content);
+                        return false;
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<?php $this->output("foot_member","file"); ?>

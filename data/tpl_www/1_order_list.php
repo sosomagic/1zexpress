@@ -30,7 +30,7 @@
                                                 <input class="form-control input-small" type="text" name="sn" value="<?php echo $sn;?>" placeholder="运单号">
                                             </div>
                                             <div class="form-group">
-                                                <select name="stock" class="form-control" style="width:135px;">
+                                                <select name="stock" class="form-control">
                                                     <option value="" selected="selected">请选择仓库</option>
                                                     <?php $stock_id["num"] = 0;$stock=is_array($stock) ? $stock : array();$stock_id["total"] = count($stock);$stock_id["index"] = -1;foreach($stock AS $key=>$value){ $stock_id["num"]++;$stock_id["index"]++; ?>
                                                     <option value="<?php echo $value['id'];?>"<?php if($stock_select == $value['id']){ ?> selected="selected"<?php } ?>><?php echo $value['title'];?></option>
@@ -38,7 +38,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <select name="channel" class="form-control" style="width: 150px;">
+                                                <select name="channel" class="form-control">
                                                     <option value="" selected="selected">请选择渠道</option>
                                                     <?php $channel_list_id["num"] = 0;$channel_list=is_array($channel_list) ? $channel_list : array();$channel_list_id["total"] = count($channel_list);$channel_list_id["index"] = -1;foreach($channel_list AS $key=>$value){ $channel_list_id["num"]++;$channel_list_id["index"]++; ?>
                                                     <option value="<?php echo $value['id'];?>"<?php if($channel_search == $value['id']){ ?> selected="selected"<?php } ?>><?php echo $value['title'];?></option>
@@ -49,7 +49,7 @@
                                                  <input id="dateRange" class="form-control" type="text" name="dateRange" value="<?php echo $dateRange;?>" placeholder="下单日期范围"/>
                                             </div>
                                             <div class="form-group">
-                                                <input class="form-control" id="fullname" name="fullname" value="<?php echo $fullname;?>" placeholder="收件人" style="width: 120px;" />
+                                                <input class="form-control" id="fullname" name="fullname" value="<?php echo $fullname;?>" placeholder="收件人"/>
                                             </div>
                                             <button style="height:32px;" class="btn btn-info" type="submit"><i class="fa fa-search"></i> 查 询 </button>
                                         </form>
@@ -60,11 +60,13 @@
                                                 <thead>
                                                 <tr>
                                                     <th>&nbsp;</th>
+                                                    <th class="bold text-center">序号</th>
                                                     <th class="bold text-center">运单号</th>
                                                     <th class="bold text-center">仓库/渠道</th>
                                                     <th class="bold text-center">总费用($)</th>
                                                     <th class="bold text-center">发件人</th>
                                                     <th class="bold text-center">收件人</th>
+                                                    <th class="bold text-center">身份证</th>
                                                     <th class="bold text-center">状态</th>
 													<th class="bold text-center">
 														<?php if($status == 'paid'){ ?>
@@ -90,11 +92,15 @@
                                                             <span></span>
                                                         </label>
                                                     </td>
+                                                    <td class="text-center"><?php echo $key+1;?></td>
                                                     <td class="text-center"><a href="<?php echo dsy_url(array('ctrl'=>'order','func'=>'order_info','id'=>$value['id']));?>"><?php echo $value['sn'];?></a><br><a onclick="showtr('trshow<?php echo $key+1;?>','imgsrc<?php echo $key+1;?>');"><img id="imgsrc<?php echo $key+1;?>" src="tpl/www/images/arrow_down1.png"></a></td>
                                                     <td class="text-center"><?php echo $value['stock']['title'];?><br><span class="font-blue"><?php echo $value['channel']['title'];?></span></td>
                                                     <td class="text-center"><?php echo $value['price'];?></td>
                                                     <td class="text-center"><?php echo $value['consignor'];?></td>
                                                     <td class="text-center"><?php echo $value['address']['fullname'];?><br><span class="font-blue"><?php echo $value['address']['mobile'];?></span></td>
+                                                    <td class="text-center">
+                                                        <?php if($value['address']['idcard'] && $value['address']['idcard_front'] && $value['address']['idcard_back']){ ?><a href="javascript:address_idcard('<?php echo $value['address']['idcard_front'];?>');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-正面"></a><a href="javascript:address_idcard('<?php echo $value['address']['idcard_back'];?>');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-反面"></a><?php }elseif($value['address']['idcard'] && (!$value['address']['idcard_front'] || !$value['address']['idcard_back'])){ ?>有号码，无照片<?php } else { ?><span class="font-red">无身份证</span> <?php } ?>
+                                                    </td>
                                                     <td class="text-center"><?php echo $value['track']['note'] ? $value['track']['note'] : $value['ext'];?></td>
 													<td class="text-center">
 														<?php if($status == 'paid' || $status == 'shipped' || $status == 'received'){ ?>
@@ -119,7 +125,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr id="trshow<?php echo $key+1;?>" style="display:none">
-                                                    <td colspan="9" align="left">
+                                                    <td colspan="11" align="left">
                                                         <div class="modal_border">
                                                             <b>总费用:</b><?php echo $value['price'];?><?php echo $value['currency']['title'];?> | <b>价值:</b><?php echo $value['val'];?><?php echo $value['currency']['title'];?> | <b>税费:</b><?php echo $value['tax'];?><?php echo $value['currency']['title'];?> | <b>保价:</b><?php echo $value['safe'];?><?php echo $value['currency']['title'];?> | <b>保费:</b><?php echo $value['safe_price'];?><?php echo $value['currency']['title'];?> | <b>增值服务费:</b><?php echo $value['custom_price'];?><?php echo $value['currency']['title'];?>
                                                         </div>
@@ -146,7 +152,7 @@
                                                 </tr>
                                                 <?php } ?>
                                                 <?php } else { ?>
-                                                <tr><td colspan="9"><span class="fa fa-warning">没有记录!</span></td></tr>
+                                                <tr><td colspan="11"><span class="fa fa-warning">没有记录!</span></td></tr>
                                                 <?php } ?>
                                                 </tbody>
                                             </table>
@@ -158,6 +164,7 @@
                                                 <input type="button" value="全选" class="btn btn-xs btn-info" onclick="$.input.checkbox_all()" />
                                                 <input type="button" value="全不选" class="btn btn-xs btn-success" onclick="$.input.checkbox_none()" />
                                                 <input type="button" value="反选" class="btn btn-xs btn-danger" onclick="$.input.checkbox_anti()" />
+                                                <input type="button" value="导出运单" class="btn btn-xs btn-info" onclick="exportOrder()" />
                                                 <input type="button" value="批量打印" class="btn btn-xs btn-warning" onclick="order_pldy()" />
                                             </div>
                                         </div>
@@ -250,6 +257,17 @@
             trid.hide();     //如果元素为显现,则将其隐藏
             imgid.attr("src", "tpl/www/images/arrow_down1.png");
         }
+    }
+    function exportOrder()
+    {
+        var ids = $.input.checkbox_join();
+        if(!ids){
+            $.dialog.alert('请选择要导出的运单');
+            return false;
+        }
+        var url = get_url('order','exportOrder','ids='+$.str.encode(ids));
+        $.dsy.go(url);
+        return false;
     }
 </script>
 <?php $this->output("foot_member","file"); ?>

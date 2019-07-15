@@ -179,10 +179,10 @@ function order_pldy(id)
 				html += '</div>';
             html += '||';
         }
-        prn1_print(html,customer,sn);
+        prn1_print(html,sn);
     }
 }
-function prn1_print(data,customer,sn){
+function prn1_print(data,sn){
     var LODOP; //声明为全局变量
     LODOP=getLodop();
     if(!confirm("您确定要批量打印吗？")) return;

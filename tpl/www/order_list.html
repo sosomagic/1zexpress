@@ -30,7 +30,7 @@
                                                 <input class="form-control input-small" type="text" name="sn" value="{$sn}" placeholder="运单号">
                                             </div>
                                             <div class="form-group">
-                                                <select name="stock" class="form-control" style="width:135px;">
+                                                <select name="stock" class="form-control">
                                                     <option value="" selected="selected">请选择仓库</option>
                                                     <!-- loop from=$stock key=$key value=$value -->
                                                     <option value="{$value.id}"{if $stock_select == $value.id} selected="selected"{/if}>{$value.title}</option>
@@ -38,7 +38,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <select name="channel" class="form-control" style="width: 150px;">
+                                                <select name="channel" class="form-control">
                                                     <option value="" selected="selected">请选择渠道</option>
                                                     <!-- loop from=$channel_list key=$key value=$value -->
                                                     <option value="{$value.id}"{if $channel_search == $value.id} selected="selected"{/if}>{$value.title}</option>
@@ -49,7 +49,7 @@
                                                  <input id="dateRange" class="form-control" type="text" name="dateRange" value="{$dateRange}" placeholder="下单日期范围"/>
                                             </div>
                                             <div class="form-group">
-                                                <input class="form-control" id="fullname" name="fullname" value="{$fullname}" placeholder="收件人" style="width: 120px;" />
+                                                <input class="form-control" id="fullname" name="fullname" value="{$fullname}" placeholder="收件人"/>
                                             </div>
                                             <button style="height:32px;" class="btn btn-info" type="submit"><i class="fa fa-search"></i> 查 询 </button>
                                         </form>
@@ -60,11 +60,13 @@
                                                 <thead>
                                                 <tr>
                                                     <th>&nbsp;</th>
+                                                    <th class="bold text-center">序号</th>
                                                     <th class="bold text-center">运单号</th>
                                                     <th class="bold text-center">仓库/渠道</th>
                                                     <th class="bold text-center">总费用($)</th>
                                                     <th class="bold text-center">发件人</th>
                                                     <th class="bold text-center">收件人</th>
+                                                    <th class="bold text-center">身份证</th>
                                                     <th class="bold text-center">状态</th>
 													<th class="bold text-center">
 														<!-- if $status == 'paid' -->
@@ -90,11 +92,15 @@
                                                             <span></span>
                                                         </label>
                                                     </td>
+                                                    <td class="text-center">{$key+1}</td>
                                                     <td class="text-center"><a href="{url ctrl=order func=order_info id=$value.id/}">{$value.sn}</a><br><a onclick="showtr('trshow{$key+1}','imgsrc{$key+1}');"><img id="imgsrc{$key+1}" src="images/arrow_down1.png"></a></td>
                                                     <td class="text-center">{$value.stock.title}<br><span class="font-blue">{$value['channel']['title']}</span></td>
                                                     <td class="text-center">{$value.price}</td>
                                                     <td class="text-center">{$value.consignor}</td>
                                                     <td class="text-center">{$value.address.fullname}<br><span class="font-blue">{$value.address.mobile}</span></td>
+                                                    <td class="text-center">
+                                                        {if $value.address.idcard && $value.address.idcard_front && $value.address.idcard_back}<a href="javascript:address_idcard('{$value.address.idcard_front}');void(0);"><img src="images/ico.png" width="16" height="13" title="预览身份证-正面"></a><a href="javascript:address_idcard('{$value.address.idcard_back}');void(0);"><img src="images/ico.png" width="16" height="13" title="预览身份证-反面"></a>{elseif $value.address.idcard && (!$value.address.idcard_front || !$value.address.idcard_back)}有号码，无照片{else}<span class="font-red">无身份证</span> {/if}
+                                                    </td>
                                                     <td class="text-center">{$value.track.note ? $value.track.note : $value.ext}</td>
 													<td class="text-center">
 														<!-- if $status == 'paid' || $status == 'shipped' || $status == 'received' -->
@@ -119,7 +125,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr id="trshow{$key+1}" style="display:none">
-                                                    <td colspan="9" align="left">
+                                                    <td colspan="11" align="left">
                                                         <div class="modal_border">
                                                             <b>总费用:</b>{$value.price}{$value.currency.title} | <b>价值:</b>{$value.val}{$value.currency.title} | <b>税费:</b>{$value.tax}{$value.currency.title} | <b>保价:</b>{$value.safe}{$value.currency.title} | <b>保费:</b>{$value.safe_price}{$value.currency.title} | <b>增值服务费:</b>{$value.custom_price}{$value.currency.title}
                                                         </div>
@@ -127,8 +133,8 @@
                                                             <b>预估重量:</b>{$value.weight}{$value.weight_id}{if !$value.jingzhong || $value.jingzhong!='0.00'} | <b>称重重量:</b>{$value.jingzhong}{$value.weight_id}{/if}{if $value.volume} | <b>体积重量:</b>{$value.volume}{$value.weight_id}({$value.length}*{$value.width}*{$value.height}){/if}{if !$value.pay_weight || $value.pay_weight!='0.00'} | <b>计费重量:</b>{$value.pay_weight}{$value.weight_id}{/if}
                                                         </div>
                                                         <div class="modal_border">
-                                                            <b>仓库:</b>{$value.stock.title}{if $value.express_sn} | <b>快递单号:</b>{$value.express_sn}（{$value.express}）{/if}{if $type} | <b>业务操作:</b>{$work[$value.type]}{/if} | <b>下单时间:</b>{func date "Y-m-d H:i:s" $value.addtime}{if $value['address']['idcard']<>''} | <b>身份证:</b>{$value['address']['idcard']}{/if} {if $value['address']['idcard_front']<>''}<a href="javascript:address_idcard('{$value['address']['idcard_front']}');void(0);"><img src="images/ico.png" width="16" height="13" title="预览身份证-正面"></a>{/if}
-                                                            {if $value['address']['idcard_back']<>''}<a href="javascript:address_idcard('{$value['address']['idcard_back']}');void(0);"><img src="images/ico.png" width="16" height="13" title="预览身份证-反面"></a>{/if}
+                                                            <b>仓库:</b>{$value.stock.title}{if $value.express_sn} | <b>快递单号:</b>{$value.express_sn}（{$value.express}）{/if}{if $type} | <b>业务操作:</b>{$work[$value.type]}{/if} | <b>下单时间:</b>{func date "Y-m-d H:i:s" $value.addtime}{if $value['address']['idcard']<>''} | <b>身份证:</b>{$value['address']['idcard']}{/if} {if $value['address']['idcard_front']<>''}<a href="javascript:address_idcard('{$value.address.idcard_front}');void(0);"><img src="images/ico.png" width="16" height="13" title="预览身份证-正面"></a>{/if}
+                                                            {if $value['address']['idcard_back']<>''}<a href="javascript:address_idcard('{$value.address.idcard_back}');void(0);"><img src="images/ico.png" width="16" height="13" title="预览身份证-反面"></a>{/if}
                                                         </div>
                                                         <div class="modal_border">
                                                         <strong>货物：</strong>
@@ -146,7 +152,7 @@
                                                 </tr>
                                                 <!-- /loop -->
                                                 <!-- else -->
-                                                <tr><td colspan="9"><span class="fa fa-warning">没有记录!</span></td></tr>
+                                                <tr><td colspan="11"><span class="fa fa-warning">没有记录!</span></td></tr>
                                                 <!-- /if -->
                                                 </tbody>
                                             </table>
@@ -158,6 +164,7 @@
                                                 <input type="button" value="全选" class="btn btn-xs btn-info" onclick="$.input.checkbox_all()" />
                                                 <input type="button" value="全不选" class="btn btn-xs btn-success" onclick="$.input.checkbox_none()" />
                                                 <input type="button" value="反选" class="btn btn-xs btn-danger" onclick="$.input.checkbox_anti()" />
+                                                <input type="button" value="导出运单" class="btn btn-xs btn-info" onclick="exportOrder()" />
                                                 <input type="button" value="批量打印" class="btn btn-xs btn-warning" onclick="order_pldy()" />
                                             </div>
                                         </div>
@@ -250,6 +257,17 @@
             trid.hide();     //如果元素为显现,则将其隐藏
             imgid.attr("src", "images/arrow_down1.png");
         }
+    }
+    function exportOrder()
+    {
+        var ids = $.input.checkbox_join();
+        if(!ids){
+            $.dialog.alert('请选择要导出的运单');
+            return false;
+        }
+        var url = get_url('order','exportOrder','ids='+$.str.encode(ids));
+        $.dsy.go(url);
+        return false;
     }
 </script>
 <!-- include tpl=foot_member -->

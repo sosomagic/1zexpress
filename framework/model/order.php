@@ -14,7 +14,6 @@ class order_model_base extends dsy_model
 	{
 		parent::model();
 	}
-
 	public function __destruct()
 	{
 		parent::__destruct();
@@ -205,6 +204,7 @@ class order_model_base extends dsy_model
    // 获取订单编号
     public function create_sn()
     {
+        date_default_timezone_set("PRC");
         $sntype = $this->site['biz_sn'];
         if(!$sntype){
             $sntype = 'year-month-date-number';
