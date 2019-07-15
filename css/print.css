@@ -1,0 +1,33 @@
+/* CSS Document */
+@charset "utf-8";
+body {background:#fff; color:#000000; font-size:12px; font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"SimSun";margin:0px; padding:0px;}
+ul{margin:0px;padding:0px;}
+ul li{ list-style:none;}
+.fl{float:left;}
+.fr{float:right;}
+.border-bot{border-bottom:1px solid #000;}
+/*A面单*/
+#box{ width:371px; height:560px; margin:0 auto;padding-right:5px;border:1px solid #000000;}
+.top{width:370px; height: 50px;margin-top: 5px;padding-left: 5px;}
+.logo{width:160px; height:48px;}
+.top_rig{ float:right; width:200px; height:50px;text-align:center;}
+.send{width:370px; height:24px;clear:both;padding-left: 5px;}
+.send_n{width:180px; height:24px;line-height:24px;}
+.send_a{width:80px;}
+.send_b{width:100px;font-weight:bold;}
+.send_d{width:60px;}
+.send_f{width:90px;}
+.send_g{width:100px;}
+.send_e{width:120px;font-weight:bold;}
+.send_c{width:275px;font-weight:bold;}
+.msgL{width:220px; line-height:24px;padding-left: 5px;}
+.msgL_na{width:220px; height:24px;}
+.msgL_nb{width:220px; height:65px;font-weight:bold;}
+.msgR{width:140px;line-height:24px;}
+.msgR_n{width:140px; height:24px; }
+.msgR_a{width:60px; height:24px;}
+.msgR_b{width:80px; height:24px;}
+.msgR_b span{font-weight:bold;}
+.msgR_z{ float:left; width:140px; height:auto;}
+.msgR_zn{ float:left; width:140px; height:24px;}
+.msgR_zn span{ float:left; width:45px; height:24px; text-align:left;}

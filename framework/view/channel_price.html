@@ -1,0 +1,74 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=channel func=price/}">运费设置</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>运费设置列表</span>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th class="bold text-center">会员组</th>
+                            <th class="bold text-center">资费标准</th>
+                            <th class="bold text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- loop from=$rslist key=$key value=$value -->
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle !important;">{$value.title}</td>
+                            <td>
+                                <table class="table table-striped table-bordered table-advance table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="bold text-center">线路名称</th>
+                                        <th class="bold text-center">抹零设置</th>
+                                        <th class="bold text-center">计重模式</th>
+                                        <th class="bold text-center">起步重量</th>
+                                        <th class="bold text-center">首磅费用</th>
+                                        <th class="bold text-center">续磅费用</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- loop from=$value.price key=$k value=$v -->
+                                    <tr>
+                                        <td class="text-center">{$v.channel.title}</td>
+                                        <td class="text-center">{if $v.num<>'0.00'}{$v.num}{else}无{/if}</td>
+                                        <td class="text-center">{if $v.rule=='ceil'}进位取整{elseif $v.rule=='round'}0.5进制{else}实际计重{/if}</td>
+                                        <td class="text-center">{$v.start_heavy}</td>
+                                        <td class="text-center">{$v.first_price}</td>
+                                        <td class="text-center">{$v.second_price}</td>
+                                    </tr>
+                                    <!-- /loop -->
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td class="text-center" style="vertical-align: middle !important;">
+                                <!-- if $popedom.modify -->
+                                <a class="btn btn-xs btn-info" href="{url ctrl=channel func=setprice id=$value.id/}"><i class="fa fa-edit"></i> 编辑</a>
+                                <!-- /if -->
+                                <!-- if $popedom.delete -->
+                                <a class="btn btn-xs btn-danger" href="javascript:;" onclick="price_del('{$value.id}','{$value.title}')"><i class="fa fa-times"></i> 删除</a>
+                                <!-- /if -->
+                            </td>
+                        </tr>
+                        <!-- /loop -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{func add_js channel.js}"></script>
+<!-- inc:foot -->

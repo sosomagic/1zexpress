@@ -1,0 +1,40 @@
+<!-- php:$title = $rs.title.' - '.$cate_rs.title.' - '.$page_rs.title -->
+<!-- include tpl=head title=$title menutitle=$cate_rs.title -->
+<div class="banner-product news-banner">
+    <div class="container">
+        <div class="banner-tt">资讯中心</div>
+        <div class="banner-englist">Information Center</div>
+    </div>
+</div>
+<div class="about-padding">
+    <div class="container">
+        <div class="nav-b clearfix"><a href="{$sys.url}">首页</a><span>/</span><a href="{$page_rs.url}" title="{$page_rs.title}">{$page_rs.title}></a>
+            <!-- if $cate_parent_rs -->
+            <span>/</span><a href="{$cate_parent_rs.url}" title="{$cate_parent_rs.title}">{$cate_parent_rs.title}</a>
+            <!-- /if -->
+            <!-- if $cate_rs -->
+            <span>/</span><a href="{$cate_rs.url}" title="{$cate_rs.title}">{$cate_rs.title}</a>
+            <!-- /if -->
+        </div>
+        <div class="clearfix">
+            <div class="pull-left about-left">
+                <!-- include tpl=block_catelist -->
+            </div>
+            <div class="pull-right about-right">
+                <div class="article-tt text-center">{$rs.title}</div>
+                <div class="article-date text-center">发表时间：{func date Y-m-d $rs.dateline}<span>浏览次数：{$rs.hits}</span></div>
+                <div class="article-c">
+                    {$rs.content}
+                </div>
+                <div class="news-nev">下一篇文章：<!-- php:$next =dsy_next($rs) -->
+                    <!-- if $next -->
+                    <a href="{$next.url}" title="{$next.title}">{$next.title}</a>
+                    <!-- else -->
+                    没有了
+                    <!-- /if -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- include tpl=foot -->

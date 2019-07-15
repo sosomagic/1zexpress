@@ -1,0 +1,28 @@
+<!-- include tpl=head title=支付宝支付 -->
+<div class="main" style="width:500px;margin:10% auto;">
+	<div class="am-panel am-panel-default">
+		<div class="am-panel-hd">订单信息</div>
+		<ul class="am-list am-list-static">
+			<li>
+				<div class="am-g">
+					<div class="am-u-sm-4 am-text-right">订单编号</div>
+					<div class="am-u-sm-8">{$order.sn}</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<form method="post" action="https://mapi.alipay.com/gateway.do?_input_charset={$alipay_config.input_charset}">
+	<!-- loop from=$postdata key=$key value=$value id=$tmpid -->
+	<input type="hidden" name="{$key}" value="{$value}" />
+	<!-- /loop -->
+	<div style="margin-top:10px;">
+		<input type="submit" value="确认支付" class="am-btn am-btn-primary am-fr" id="payment_submit" />
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#payment_submit").click();
+});
+</script>
+</div>
+<!-- include tpl=foot -->

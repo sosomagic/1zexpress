@@ -1,0 +1,63 @@
+<input type="hidden" name="ext_form_id" id="ext_form_id" value="cate_id,is_multiple,upload_auto" />
+<table class="table table-striped table-bordered table-advance table-hover">
+    <tbody>
+    <tr>
+        <td class="text-right" style="width:175px;">默认存储到：</td>
+        <td>
+                <!-- loop from=$catelist key=$key value=$value -->
+                <div class="md-radio">
+                    <input id="cate_id_{$value.id}" type="radio" name="cate_id" value="{$value.id}"{if $rs.cate_id == $value.id || (!$rs.cate_id && $rs.is_default)} checked{/if} class="md-radiobtn">
+                    <label for="cate_id_{$value.id}">
+                        <span></span>
+                        <span class="check"></span>
+                        <span class="box"></span> {$value.title} &nbsp; <em>附件类型：{$value.filetypes}</em> </label>
+                </div>
+                <!-- /loop -->
+
+            <span class="help-block">设置该图片默认存到哪个文件夹下，不设置使用默认</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right">表单附件属性：</td>
+        <td>
+            <div class="md-radio-inline">
+                <div class="md-radio">
+                    <input id="is_multiple_0" type="radio" name="is_multiple" value="0"{if !$rs.is_multiple} checked{/if} class="md-radiobtn">
+                    <label for="is_multiple_0">
+                        <span></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 单个附件 </label>
+                </div>
+                <div class="md-radio">
+                    <input id="is_multiple_1" type="radio" name="is_multiple" value="1"{if $rs.is_multiple} checked{/if} class="md-radiobtn">
+                    <label for="is_multiple_1">
+                        <span></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 多附件 </label>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right">选择后即刻上传：</td>
+        <td>
+            <div class="md-radio-inline">
+                <div class="md-radio">
+                    <input id="upload_auto_0" type="radio" name="upload_auto" value="0"{if !$rs.upload_auto} checked{/if} class="md-radiobtn">
+                    <label for="upload_auto_0">
+                        <span></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 否 </label>
+                </div>
+                <div class="md-radio">
+                    <input id="upload_auto_1" type="radio" name="upload_auto" value="1"{if $rs.upload_auto} checked{/if} class="md-radiobtn">
+                    <label for="upload_auto_1">
+                        <span></span>
+                        <span class="check"></span>
+                        <span class="box"></span> 是 </label>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

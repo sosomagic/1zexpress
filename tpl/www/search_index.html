@@ -1,0 +1,117 @@
+<!-- include tpl=head title=运单查询 -->
+<STYLE TYPE="text/css"> 
+.box{margin:100px auto; width:1000px;}
+#keywords{
+    border: 1px solid #cecfce;
+    border-radius: 4px;
+    color: #bdbdbd;
+    float: left;
+    font-size: 14px;
+    outline: medium none;
+    padding: 0.2em;
+    width: 70%;
+	line-height:42px;
+}
+.btn-warning {
+    background-color: #f78621;
+    border-color: #eea236;
+    color: #fff;
+    font-size: 24px;
+    margin: 0 15px;
+    text-align: center;
+    width: 15%;
+}
+.btn-group-lg > .btn, .btn-lg {
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 1.33333;
+    padding: 10px 16px;
+}
+
+*::after, *::before {
+    box-sizing: border-box;
+}
+*::after, *::before {
+    box-sizing: border-box;
+}
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    cursor: pointer;
+}
+.btn-warning {
+    background-color: #f78621;
+    border-color: #eea236;
+    color: #fff;
+    font-size: 24px;
+    margin: 0 15px;
+    text-align: center;
+    width: 15%;
+}
+.btn-group-lg > .btn, .btn-lg {
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 1.33333;
+    padding: 10px 16px;
+}
+.btn-warning {
+    background-color: #f0ad4e;
+    border-color: #eea236;
+    color: #fff;
+}
+.btn {
+    -moz-user-select: none;
+    background-image: none;
+    display: inline-block;
+    font-weight: 400;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+@media screen and (min-width:0px)  and  (max-width:1199px)  {
+.box{width:90%; margin:0 auto; margin-top:3rem;}
+#keywords{
+    border: 1px solid #cecfce;
+    border-radius: 4px;
+    color: #bdbdbd;
+    float: left;
+    font-size: 14px;
+    outline: medium none;
+    padding: 0;
+    width: 100%;
+	line-height:42px;
+	margin-bottom:1rem;
+	
+}
+.btn-warning {
+    font-size: 14px;
+	width: 100%;
+	margin: 0 0;
+
+}
+}
+
+</style>
+<div class="box">
+	<form id="search" class="formBlock" method="post" action="{url ctrl=search func=show /}" >
+	<input name="keywords" id="keywords" value="" placeholder="支持批量查询，多个运单号用;号隔开，最多一次只能查询10个运单号" type="text">
+	<input id="start_search" class="btn btn-warning btn-lg" value="查询" type="submit">
+	<div class="clearfix"> </div>
+	</form>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#start_search").click(function(){
+		var keywords=$("#keywords").val();
+		if(!keywords){
+			$.dialog.alert("请填写查询运单号");
+			return false;		
+		}
+		var arr = keywords.split(';');
+		if(arr.length>10){
+		   $.dialog.alert("一次最多只能查询10个运单号");
+			return false;		
+		}
+	   $("#search").submit();
+	});
+});
+</script>

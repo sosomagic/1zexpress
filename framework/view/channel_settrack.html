@@ -1,0 +1,93 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{func admin_url channel track_list}" title="返回运单状态列表">运单状态管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span><!-- if $id -->编辑<!-- else -->添加<!-- /if -->运单状态</span>
+        </li>
+    </ul>
+</div>
+<form method="post" action="{func admin_url channel track_setok}">
+    <input type="hidden" name="id" id="id" value="{$id}" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-2">状态名：</td>
+                            <td><input id="title" name="title" type="text" value="{$rs.title}" class="form-control"/></td>
+                        </tr>
+                        <!-- if !$rs.status -->
+                        <tr>
+                            <td class="text-right col-md-2">自动更新时间间隔：</td>
+                            <td><input id="space" name="space" type="text" value="{$rs.space}" class="form-control"/>
+                                <span class="help-block">直接填写数字，例如5，就代表第5天后自动更新该状态</span>
+                            </td>
+                        </tr>
+                        <!-- /if -->
+                        <tr>
+                            <td class="text-right">隶属仓库：</td>
+                            <td>
+                                <div class="md-checkbox-inline">
+                                    <!-- loop from=$stock key=$key value=$value -->
+                                    <div class="md-checkbox">
+                                        <input id="stock_id{$value.id}" type="checkbox" value="{$value.id}" name="stock_id[]"{if in_array($value.id,$c_id)} checked{/if} />
+                                        <label for="stock_id{$value.id}">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> {$value.title} </label>
+                                    </div>
+                                    <!-- /loop -->
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- if $rs.status -->
+                        <tr>
+                            <td class="text-right">邮件：</td>
+                            <td>
+                                <select class="form-control" name="mail">
+                                    <option value="">{lang邮件模板：}{lang不通知会员}</option>
+                                    <!-- loop from=$emailtpl key=$key value=$value -->
+                                    <!-- if substr($value.identifier,0,4) != 'sms_' -->
+                                    <option value="{$value.identifier}"{if $rs.mail == $value.identifier} selected{/if}>{lang邮件模板：}{$value.title}</option>
+                                    <!-- /if -->
+                                    <!-- /loop -->
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">手机短信：</td>
+                            <td>
+                                <select class="form-control" name="sms">
+                                    <option value="">{lang短信模板：}{lang不通知会员}</option>
+                                    <!-- loop from=$emailtpl key=$key value=$value -->
+                                    <!-- if substr($value.identifier,0,4) == 'sms_' -->
+                                    <option value="{$value.identifier}"{if $rs.sms == $value.identifier} selected{/if}>{lang短信模板：}{$value.title}</option>
+                                    <!-- /if -->
+                                    <!-- /loop -->
+                                </select>
+                            </td>
+                        </tr>
+                        <!-- /if -->
+                        <tr>
+                            <td class="text-right">排序：</td>
+                            <td><input id="taxis" name="taxis" type="text" class="form-control" value="{$rs.taxis ? $rs.taxis : 255}" />
+                                <span class="help-block">值越小越往前排，最大为255，最小为1</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit"> 提 交 </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- inc:foot -->

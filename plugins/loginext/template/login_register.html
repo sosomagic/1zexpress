@@ -1,0 +1,179 @@
+<!-- head title=$title css="artdialog.css" extjs="jquery.artdialog.js" close=false html5=true -->
+<style type="text/css">
+body{font-size:14px;font-family:"Microsoft Yahei","宋体","Arial","Arial Narrow","HELVETICA";margin:0;padding:0}
+a{color:#666;text-decoration:none}
+a:hover{color:#00F;text-decoration:underline}
+.main{margin:0 auto;width:100%;height:100%;}
+.main2{width:600px;height:400px;margin:-200px auto auto -300px;position:absolute;left:50%;top:45%;}
+div.qq{text-align:center;line-height:22px;border:1px solid #ccc;border-radius:5px;padding:5px;background:#efefef;}
+div.qq .img{border-radius:20px;border:1px solid #fff;background:#fff;}
+div.section{margin:10px auto;border:1px solid #ccc;}
+div.section:after{clear:both;content:'.';display:block;visibility:hidden;height:0;line-height:0;overflow:hidden;}
+div.section ul{list-style:none;margin:0;padding:0;}
+div.section ul.tit{height:30px;line-height:30px;}
+div.section ul.tit li{width:50%;float:left;background:#efefef;height:30px;line-height:30px;text-align:center;cursor:pointer;}
+div.section ul.tit li.on{background:#fff;}
+div.section ul.content li{display:none;}
+div.section ul.content li.on{display:block;}
+
+div.box{margin:30px;}
+div.box dd{margin-bottom:5px;line-height:26px;}
+div.box label{float:left;margin-right:5px;text-align:right; width:110px; line-height:26px;}
+div.box .input{border: 1px solid #CCCCCC; line-height: 20px; padding:3px;width: 220px;}
+div.box .vcode{border: 1px solid #CCCCCC; line-height: 20px; padding:3px;width:130px;text-transform:uppercase;margin-right:3px;}
+div.box dd.submit{ padding-left: 115px; padding-top:10px;}
+
+.button {display: inline-block;zoom: 1;vertical-align: baseline;margin: 0 2px;outline: none;cursor: pointer;text-align: center;text-decoration: none;font-size: 14px;line-height: 100%;padding: .4em 1.5em .55em;border: none;border-radius: 2px;color: #fff;background: #A7A9AA;}
+.button.blue {background: #007ead;}
+.button.blue:hover {background:#3375b9;}
+</style>
+<script type="text/javascript">
+var open_vcode = '{$sys.is_vcode && function_exists("imagecreate") ? 1 : 0}';
+$(document).ready(function(){
+	$('#login-form').submit(function(){
+		$(this).ajaxSubmit({
+			url:api_url('login','save'),
+			type:'post',
+			dataType:'json',
+			success:function(rs){
+				if(rs.status == 'ok'){
+					var url = get_url('plugin','','id=loginext&exec=bind_end');
+					$.dsy.json(url,function(){
+						return true;
+					});
+					$.dialog.alert('您已成功登录',function(){
+						$.dsy.go('{$backurl ? $backurl : $sys.url}');
+					},'succeed');
+				}else{
+					if(!rs.content){
+						rs.content = '登录失败';
+					}
+					$.dialog.alert(rs.content,function(){
+						if(open_vcode == '1'){
+							$("#_chkcode").val('');
+							$("#vcode").dsy_vcode();
+						}
+					},'error');
+					return false;
+				}
+			}
+		});
+		return false;
+	});
+	$("#register-form").submit(function(){
+		$(this).ajaxSubmit({
+			type:'post',
+			url: api_url('register','save'),
+			dataType:'json',
+			success: function(rs){
+				if(rs.status == 'ok'){
+					var url = get_url('plugin','','id=loginext&exec=bind_end');
+					$.dsy.json(url,function(){
+						return true;
+					});
+					$.dialog.alert('您已成功注册',function(){
+						$.dsy.go('{$backurl ? $backurl : $sys.url}');
+					},'succeed');
+				}else{
+					if(!rs.content){
+						rs.content = '注册失败';
+					}
+					$.dialog.alert(rs.content,function(){
+						if(open_vcode == '1'){
+							$("#_chkcode2").val('');
+							$("#vcode2").dsy_vcode();
+						}
+					},'error');
+					return false;
+				}
+			}
+		});
+		return false;
+	});
+
+});
+</script>
+</head>
+<body>
+<div class="main">
+	<div class="main2">
+		<!-- if $rs.type == 'qq' -->
+		<div class="qq"><img src="{$qq.avatar}" class="img" width="40px" /><br />{$qq.nickname}</div>
+		<!-- /if -->
+		<!-- if $rs.type == 'weibo' -->
+		<div class="qq"><img src="{$weibo.avatar}" class="img" width="40px" /><br />{$weibo.nickname}</div>
+		<!-- /if -->
+		<!-- if $rs.type == 'weixin' -->
+		<div class="qq"><img src="{$weixin.avatar}" class="img" width="40px" /><br />{$weixin.nickname}</div>
+		<!-- /if -->
+		<div class="section">
+			<ul class="tit">
+				<li>会员登录</li>
+				<li>会员注册</li>
+			</ul>
+			<ul class="content">
+				<li>
+					<div class="box">
+					<form method="post" id="login-form">
+						<dd><label>账号：</label><input class="input" type="text" name="user" value="{$nickname}" /><div class="clear"></div></dd>
+						<dd><label>密码：</label><input class="input" type="password" name="pass" /><div class="clear"></div></dd>
+						<!-- if $sys.is_vcode && function_exists("imagecreate") -->
+						<dd><label>验证码：</label><input class="vcode"  type="text" name="_chkcode" id="_chkcode" /><img src="" border="0" align="absmiddle" id="vcode" class="hand" /><div class="clear"></div></dd>
+						<script type="text/javascript">
+						$(document).ready(function(){
+							$("#vcode").dsy_vcode();
+							$("#vcode").click(function(){
+								$(this).dsy_vcode();
+							});
+						});
+						</script>
+						<!-- /if -->
+						<dd class="submit"><input class="button blue" type="submit" value="登录" name=""></dd>
+					</form>
+					</div>
+				</li>
+				<li>
+					<div class="box">
+					<form method="post" id="register-form">
+						<dd><label>账号：</label><input class="input" type="text" name="user" value="{$nickname}" /><div class="clear"></div></dd>
+						<dd><label>密码：</label><input class="input" type="password" name="newpass" /><div class="clear"></div></dd>
+						<dd><label>确认密码：</label><input class="input" type="password" name="chkpass" /><div class="clear"></div></dd>
+						<!-- if $sys.is_vcode && function_exists("imagecreate") -->
+						<dd><label>验证码：</label><input class="vcode"  type="text" name="_chkcode" id="_chkcode2" /><img src="" border="0" align="absmiddle" id="vcode2" class="hand" /><div class="clear"></div></dd>
+						<script type="text/javascript">
+						$(document).ready(function(){
+							$("#vcode2").dsy_vcode();
+							$("#vcode2").click(function(){
+								$(this).dsy_vcode();
+							});
+						});
+						</script>
+						<!-- /if -->
+						<dd class="submit"><input class="button blue" type="submit" value="注册" name=""></dd>
+					</form>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".section .tit li").click(function(){
+		$(".section .tit li").removeClass('on');
+		$(this).addClass('on');
+		var i = $('li').index(this);
+		$(".section .content li").hide();
+		$(".section .content li:eq("+i+")").show();
+		if(i == 1 && open_vcode == 1){
+			$("#vcode2").dsy_vcode();
+		}
+		if(i == 0 && open_vcode == 1){
+			$("#vcode").dsy_vcode();
+		}
+	});
+	$(".section .tit li:eq(0)").click();
+});
+</script>
+</body>
+</html>

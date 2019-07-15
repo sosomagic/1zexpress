@@ -1,0 +1,91 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('usergroup')}" title="返回会员等级列表">会员等级管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>{if $id}编辑{else}添加{/if}会员等级</span>
+        </li>
+    </ul>
+</div>
+<form method="post" action="{url ctrl=usergroup func=setok id=$id/}" onsubmit="return to_submit();">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right">会员等级名：</td>
+                            <td><input id="title" name="title" type="text" value="{$rs.title}" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">注册审核：</td>
+                            <td>
+
+                                <div class="md-radio-inline">
+                                    <div class="md-radio">
+                                        <input class="form-control" type="radio" id="register_status1" name="register_status" value="1" {if $rs.register_status == '1'} checked{/if} class="md-radiobtn">
+                                        <label for="register_status1">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 免审核 </label>
+                                    </div>
+                                    <!-- if $reglist -->
+                                    <div class="md-radio">
+                                        <input type="radio" id="register_status2" name="register_status" value="email" {if $rs.register_status == 'email'} checked{/if} class="md-radiobtn">
+                                        <label for="register_status2">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 邮箱验证注册 </label>
+                                    </div>
+                                    <div class="md-radio">
+                                        <input type="radio" id="register_status3" name="register_status" value="code" {if $rs.register_status == 'code'} checked{/if} class="md-radiobtn">
+                                        <label for="register_status3">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 邀请码验证 </label>
+                                    </div>
+                                    <!-- /if -->
+                                    <div class="md-radio">
+                                        <input type="radio" id="register_status4" name="register_status" value="0" {if !$rs.register_status} checked{/if} class="md-radiobtn">
+                                        <label for="register_status4">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 人工审核 </label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">排序：</td>
+                            <td><input id="taxis" name="taxis" value="{$rs.taxis ? $rs.taxis : 255}" class="form-control" />
+                                <span class="help-block">设置排序，最大值不超过255，最小值为0，值越小越往前靠</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit"> 提 交 </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<script type="text/javascript">
+    function to_submit()
+    {
+        var title = $("#title").val();
+        if(!title)
+        {
+            $.dialog.alert("会员等级名称不能为空");
+            return false;
+        }
+    }
+</script>
+<!-- inc:foot -->

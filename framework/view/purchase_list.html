@@ -1,0 +1,96 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=purchase/}">代购管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>代购列表</span>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th class="bold text-center">会员名</th>
+                            <th class="bold text-center">商品缩略图</th>
+                            <th class="bold text-center">商品名称</th>
+                            <th class="bold text-center">单价</th>
+                            <th class="bold text-center">数量</th>
+                            <th class="bold text-center">备注</th>
+                            <th class="bold text-center">到货仓库</th>
+                            <th class="bold text-center">提交时间</th>
+                            <th class="bold text-center">状态</th>
+                            <th class="bold text-center">运费（$）</th>
+                            <th class="bold text-center">总费用（$）</th>
+                            <th class="bold text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- loop from=$rslist key=$key value=$value -->
+                        <tr>
+                            <td class="text-center">{$value.user.user}</td>
+                            <td class="text-center">{if $value.vpic<>''}<a href="javascript:show_pic('{$value.vpic}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13"></a>{/if}</td>
+                            <td><a href="{$value.url}" target="_blank">{$value.title}</a></td>
+                            <td>{$value.price}</td>
+                            <td>{$value.num}</td>
+                            <td>{$value.note}</td>
+                            <td>{$value.stock.title}</td>
+                            <td>{func date 'Y-m-d' $value.addtime}</td>
+                            <td class="text-center">{if $value.status==2}已订购{elseif $value.status==1}<span class="font-red">已扣款</span>{else}<span class="font-blue">未审核</span>{/if}</td>
+                            <td class="text-center">{$value.express_price}</td>
+                            <td class="text-center">{$value.pay_price}</td>
+                            <td class="text-center">
+                                <a class="btn btn-xs blue" href="{url ctrl=purchase func=set id=$value.id/}">编辑</a>
+                                <input type="button" value="删除" onclick="del('{$value.id}','{$value.title}')" class="btn btn-xs btn-danger" />
+                            </td>
+                        </tr>
+                        <!-- /loop -->
+                        </tbody>
+                    </table>
+                    <!-- if $pagelist --><div class="text-right"><!-- include tpl=pagelist --></div><!-- /if -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END CONTAINER -->
+<script>
+    function del(id,title)
+    {
+        $.dialog.confirm('确定要删除代购信息：<span class="red">'+title+'</span> 吗?<br />删除后您不能再恢复，请慎用<br /><span class="darkblue">删除成功后系统会自动刷新当前页面且不提示</span>',function(){
+            var url = get_url('purchase','delete','id='+id);
+            var rs = json_ajax(url);
+            if(rs.status == 'ok')
+            {
+                $.dsy.reload();
+            }
+            else
+            {
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+    function show_pic(id)
+    {
+        var url = get_url('purchase','show_pic','id='+id);
+        var title = '商品图片';
+        $.dialog.open(url,{
+            'title':title,
+            'lock':true,
+            'width':'350px',
+            'height':'350px',
+            'cancel':function(){
+                return true;
+            }
+        });
+    }
+</script>
+<!-- inc:foot -->

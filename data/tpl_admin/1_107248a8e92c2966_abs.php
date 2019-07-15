@@ -1,0 +1,38 @@
+<?php if(!defined("DSAIYIN_SET")){exit("<h1>Access Denied</h1>");} ?><tr>
+    <td class="text-right">QQ登录的APP ID：</td>
+    <td><input id="qq_appid" name="qq_appid" type="text" value="<?php echo $plugin['param']['qq_appid'];?>" class="form-control"/>
+        <span class="help-block">QQ开放平台申请到的APP ID，申请地址：<a href="http://connect.qq.com/" target="_blank">http://connect.qq.com/</a></span>
+    </td>
+</tr>
+<tr>
+    <td class="text-right">QQ登录的APP Key：</td>
+    <td><input id="qq_appkey" name="qq_appkey" type="text" value="<?php echo $plugin['param']['qq_appkey'];?>" class="form-control"/>
+        <span class="help-block">QQ开放平台申请到的APP Key</span>
+    </td>
+</tr>
+<tr>
+    <td class="text-right">微信APP ID：</td>
+    <td><input id="wx_appid" name="wx_appid" value="<?php echo $plugin['param']['wx_appid'];?>" class="form-control"/>
+        <span class="help-block">微信开放平台申请到的APP ID，申请地址：<a href="https://open.weixin.qq.com/" target="_blank">https://open.weixin.qq.com/</a></span>
+    </td>
+</tr>
+<tr>
+    <td class="text-right">微信APP Secret：</td>
+    <td><input id="wx_secret" name="wx_secret" value="<?php echo $plugin['param']['wx_secret'];?>" class="form-control"/>
+        <span class="help-block">微信开放平台申请到的APP Secret</span>
+    </td>
+</tr>
+<tr>
+    <td class="text-right">微博APP Key：</td>
+    <td><input type="text" id="wb_appkey" name="wb_appkey" value="<?php echo $plugin['param']['wb_appkey'];?>" class="form-control"/>
+        <span class="help-block">微博开放平台申请到的APP Key，申请地址：<a href="http://open.weibo.com" target="_blank">http://open.weibo.com/</a></span>
+    </td>
+</tr>
+
+<tr>
+    <td class="text-right"> 微博APP Secret：</td>
+    <td>
+    <input type="text" id="wb_secret" name="wb_secret" value="<?php echo $plugin['param']['wb_secret'];?>" class="form-control"/>
+        <span class="help-block">微博开放平台申请到的APP Secret</span>
+    </td>
+</tr>

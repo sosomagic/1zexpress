@@ -1,0 +1,56 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=gateway/}">邮箱/短信</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>短信/邮箱设置</span>
+        </li>
+    </ul>
+    <div class="text-right" style="padding: 5px 10px 5px 0"><a class="btn btn-circle green-meadow btn-outline sbold uppercase btn-sm" href="javascript:add_it('sms');void(0)">{lang添加短信接口}</a>&nbsp;&nbsp;<a class="btn btn-circle green-meadow btn-outline sbold uppercase btn-sm" href="javascript:add_it('email');void(0)">{lang添加邮件接口}</a></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-advance table-hover">
+                        <thead>
+                        <tr>
+
+                            <th class="col-md-4">标题</th>
+                            <th class="col-md-4">所属网关</th>
+                            <th class="col-md-1">默认</th>
+                            <th class="col-md-3">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- loop from=$rslist key=$key value=$value id=$tmpid -->
+                        <!-- loop from=$value.list key=$k value=$v -->
+                        <tr>
+                            <td>{$v.title}</td>
+                            <td>{$value.title}</td>
+                            <td><!-- if $v.is_default -->
+                                是
+                                <!-- else -->
+                                <input type="button" value="设为默认" onclick="update_default({$v.id})" class="btn btn-xs btn-default" />
+                                <!-- /if --></td>
+                            <td>
+                                <input type="button" value="{lang编辑}" onclick="$.dsy.go('{url ctrl=gateway func=set id=$v.id/}')" class="btn btn-xs blue" />
+                                <input type="button" value="{lang删除}" onclick="delete_it('{$v.id}','{$v.title}')" class="btn btn-xs btn-danger" />
+                                <input type="button" value="{if $v.status}{lang启用中}{else}{lang已禁用}{/if}" onclick="update_status({$v.id},{$v.status})" class="btn btn-xs btn-success" />
+                            </td>
+                        </tr>
+                        <!-- /loop -->
+                        <!-- /loop -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{func add_js admin.gateway}"></script>
+<!-- inc:foot -->

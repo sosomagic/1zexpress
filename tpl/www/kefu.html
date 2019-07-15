@@ -1,0 +1,16 @@
+<!--右侧客服 -->
+<!-- php:$list = dsy('kefu') -->
+<!-- if $list.project && $list.rslist -->
+<script type="text/javascript" src="js/zzsc.js"></script>
+<div id="izl_rmenu" class="izl-rmenu">
+    <!-- loop from=$list.rslist key=$key value=$value -->
+    <a href="tencent://Message/?Uin={$value.qq}&websiteName=dsaiyin.com=&Menu=yes" class="btn_kf btn-qq"></a>
+    <!-- /loop -->
+    <!-- if $list.project.barcode -->
+    <div class="btn_kf btn-wx"><span class="pic"><img src="{$list.project.barcode.filename}" alt="{$list.project.title}" /></span></div>
+    <!-- /if -->
+    <div class="btn_kf btn-phone"><div class="phone">{$tel}</div></div>
+    <div class="btn_kf btn-top"></div>
+</div>
+<!-- /if -->
+<!--右侧客服 -->

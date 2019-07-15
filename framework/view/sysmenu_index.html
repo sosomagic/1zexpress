@@ -1,0 +1,169 @@
+<!-- inc:head -->
+<!-- inc:nav -->
+<div class="page-container">
+<!-- inc:left -->
+<div class="page-content-wrapper">
+<div class="page-content">
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('system')}">核心配置</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>后台菜单列表</span>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bars"></i>核心配置</div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-striped table-bordered table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th class="bold">名称</th>
+                            <th class="bold">控制器</th>
+                            <th class="bold">状态</th>
+                            <th class="bold">桌面显示</th>
+                            <th class="bold">排序</th>
+                            <th class="bold">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- loop from=$rslist key=$key value=$value id=$tmpid -->
+                        <tr>
+                            <td class="bold">{$value.title}</td>
+                            <td>&nbsp;</td>
+                            <td><input type="button" value="{$value.status ? '启用' : '禁用'}" class="btn btn-sm btn-info"{if $popedom.status} onclick="set_status({$value.id},this)"{else} onclick="$.dialog.alert('您没有权限执行此功能')"{/if} /></td>
+                            <td>&nbsp;</td>
+                            <td><div class="gray i hand center" title="{lang点击调整排序}" name="taxis" data="{$value.id}">{$value.taxis}</div></td>
+                            <td><!-- if $popedom.modify --><input type="button" value="{lang编辑}" onclick="$.dsy.go('{url ctrl=system func=set id=$value.id/}')" class="dsy-btn" /><!-- /if -->
+                                <!-- if $popedom.add --><input type="button" value="{lang添加子项}" onclick="$.dsy.go('{url ctrl=system func=set pid=$value.id/}')" class="dsy-btn" /><!-- /if --></td>
+                        </tr>
+                        <!-- loop from=$value.sublist key=$k value=$v id=$tmpid2 -->
+                        <tr>
+                            <td>{$v.title}</td>
+                            <td>framework/admin/{$v.appfile}_control.php</td>
+                            <td><input type="button" value="{$v.status ? '启用' : '禁用'}" class="dsy-btn"{if $popedom.status} onclick="set_status({$v.id},this)"{else} onclick="$.dialog.alert('{lang您没有权限执行此功能}')"{/if} /></td>
+                            <td><input type="button" class="dsy-btn" id="icon_status_{$v.id}" onclick="set_icon('{$v.id}')" value="{if $v.icon}{lang显示}{else}{lang隐藏}{/if}" /> <i{if $v.icon} class="icon-{$v.icon}"{/if} id="icon_{$v.id}" style="font-size:16px;"></i></td>
+                            <td><div class="gray i hand center" title="{lang点击调整排序}" name="taxis" data="{$v.id}">{$v.taxis}</div></td>
+                            <td><!-- if $popedom.modify --><input type="button" value="{lang编辑}" onclick="$.dsy.go('{url ctrl=system func=set id=$v.id/}')" class="dsy-btn" /><!-- /if -->
+                                <!-- if $popedom.delete --><input type="button" value="{lang删除}" onclick="delete_sysmenu('{$v.id}','{$v.title}')" class="dsy-btn" /><!-- /if --></td>
+                        </tr>
+                        <!-- /loop -->
+                        <!-- /loop -->
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+</div>
+<script type="text/javascript">
+    function set_status(id,obj)
+    {
+        var url = get_url("system","status") + '&id='+id;
+        $.ajax({
+            'url':url,
+            'dataType':'json',
+            'cache':false,
+            'async':true,
+            'beforeSend': function (XMLHttpRequest){
+                XMLHttpRequest.setRequestHeader("request_type","ajax");
+            },
+            'success':function(rs){
+                if(!rs.content){
+                    rs.content = '0';
+                }
+                var oldvalue = $(obj).val();
+                if(oldvalue == '禁用'){
+                    $(obj).val('启用');
+                }else{
+                    $(obj).val('禁用');
+                }
+            }
+        });
+    }
+    function delete_sysmenu(id,title)
+    {
+        $.dialog.confirm("确定要删除导航：<span class='red'>"+title+"</span>，删除后是不能恢复的！",function(){
+            var url = get_url('system','delete','id='+id);
+            var rs = json_ajax(url);
+            if(rs.status != 'ok')
+            {
+                $.dialog.alert(rs.content);
+                return false;
+            }
+            window.location.reload();
+        });
+    }
+    function update_taxis(val,id)
+    {
+        $.ajax({
+            'url':get_url('system','taxis','taxis['+id+']='+val),
+            'dataType':'json',
+            'cache':false,
+            'async':true,
+            'beforeSend': function (XMLHttpRequest){
+                XMLHttpRequest.setRequestHeader("request_type","ajax");
+            },
+            'success':function(rs){
+                if(rs.status == 'ok'){
+                    $("div[data="+id+"]").html(val);
+                    //$.dsy.reload();
+                }else{
+                    $.dialog.alert(rs.content);
+                    return false;
+                }
+            }
+        });
+    }
+    function set_icon(id)
+    {
+        var url = get_url('system','icon','id='+id);
+        $.dialog.open(url,{
+            'title':'设置图标',
+            'width':'70%',
+            'height':'70%',
+            'lock':true,
+            'ok':function(){
+                var iframe = this.iframe.contentWindow;
+                if (!iframe.document.body) {
+                    alert('iframe还没加载完毕呢');
+                    return false;
+                };
+                iframe.save();
+                return false;
+            },'okVal':'提交保存',
+            'cancel':function(){
+                return true;
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("div[name=taxis]").click(function(){
+            var oldval = $(this).text();
+            var id = $(this).attr('data');
+            $.dialog.prompt('请填写新的排序：',function(val){
+                if(val != oldval){
+                    update_taxis(val,id);
+                }
+            },oldval);
+        });
+    });
+</script>
+<!-- inc:foot -->

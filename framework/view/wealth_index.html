@@ -1,0 +1,116 @@
+<!-- inc:head -->
+<!-- inc:nav -->
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <!-- inc:left -->
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+            <!-- BEGIN PAGE HEADER-->
+            <!-- BEGIN PAGE BAR -->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="{url ctrl=wealth/}">财富方案</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <span>财富方案</span>
+                    </li>
+                </ul>
+                <span class="pull-right" style="margin-top: 10px;"><a href="{url ctrl=wealth func=notcheck/}">未审核财富</a></span>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="icon-settings font-red"></i>
+                                <span class="caption-subject font-red sbold uppercase">财富方案</span>
+                            </div>
+                            <div class="pull-right" >
+                                <a class="btn green" href="{url ctrl=wealth func=set/}">
+                                    <i class="fa fa-plus"></i>
+                                    添加方案
+                                </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-advance table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="bold">ID</th>
+                                    <th class="bold">名称</th>
+                                    <th class="bold">标识</th>
+                                    <th class="bold">单位</th>
+                                    <th class="bold">在线支付</th>
+                                    <th class="bold">抵现</th>
+                                    <th class="bold">状态</th>
+                                    <th class="bold text-center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- loop from=$rslist key=$key value=$value -->
+                                <tr>
+                                    <td>{$value.id}</td>
+                                    <td>{$value.title}</td>
+                                    <td>{$value.identifier}</td>
+                                    <td>{$value.unit}</td>
+                                    <td><!-- if $value.ifpay -->支持 <span class="gray i">（购买：1元={$value.pay_ratio}{$value.unit}）</span><!-- else -->不支持<!-- /if --></td>
+                                    <td><!-- if $value.ifcash -->支持 <span class="gray i">（兑换：100{$value.unit}={$value.cash_ratio}元）</span><!-- else -->不支持<!-- /if --></td>
+                                    <td>{if $value.status}启用{else}禁用{/if}</td>
+                                    <td class="text-center">
+                                        <input type="button" value="{lang编辑}" onclick="$.dsy.go('{url ctrl=wealth func=set id=$value.id/}')" class="btn btn-xs btn-info" />
+                                        <input type="button" value="{lang执行规则}" onclick="$.dsy.go('{url ctrl=wealth func=rule id=$value.id/}')" class="btn btn-xs btn-success" />
+                                        <input type="button" value="{lang财富列表}" onclick="$.dsy.go('{url ctrl=wealth func=info id=$value.id/}')" class="btn btn-xs btn-warning" />
+                                        <input type="button" value="{lang删除}" onclick="delete_it('{$value.id}')" class="btn btn-xs btn-danger" />
+                                    </td>
+                                </tr>
+                                <!-- /loop -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<script type="text/javascript">
+   /* function set_status(id)
+    {
+        var url = get_url("wealth","status") + '&id='+id;
+        var rs = $.dsy.json(url);
+        if(rs.status == "ok"){
+            if(!rs.content) rs.content = '0';
+            var oldvalue = $("#status_"+id).attr("value");
+            var old_cls = "status"+oldvalue;
+            $("#status_"+id).removeClass(old_cls).addClass("status"+rs.content).attr("value",rs.content);
+        }else{
+            $.dialog.alert(rs.content);
+            return false;
+        }
+    }*/
+    function delete_it(id)
+    {
+        $.dialog.confirm('{lang确定要删除当前财富方案吗？}<br />{lang删除后此方案的财富将}<span class="red"><b>{lang清空，且不能恢复，请慎重考虑}</b></span>',function(){
+            var url = get_url('wealth','delete','id='+id);
+            var rs = $.dsy.json(url);
+            if(rs.status == 'ok'){
+                $.dialog.alert('{lang方案删除成功}',function(){
+                    $.dsy.reload();
+                },'succeed');
+            }else{
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+</script>
+<!-- inc:foot -->

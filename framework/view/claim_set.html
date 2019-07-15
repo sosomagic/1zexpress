@@ -1,0 +1,72 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('claim')}" title="返回理赔列表">理赔管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>理赔处理</span>
+        </li>
+    </ul>
+</div>
+<form method="post" action="{func admin_url claim setok}">
+    <input type="hidden" name="id" id="id" value="{$id}" />
+    <input type="hidden" name="user_id" value="{$rs.user_id}" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-2">理赔运单号：</td>
+                            <td><input class="form-control" type="text" name="sn" value="{$rs.sn}" readonly />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right col-md-2">理赔金额：</td>
+                            <td><input type="text" id="money" name="money" class="input-xsmall" value="{$rs.money}"/> {$currency.title}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">回复内容：</td>
+                            <td><textarea name="replay" maxlength="100" class="form-control" rows="2">{$rs.replay}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">状态：</td>
+                            <td><div class="md-radio-inline">
+                                <div class="md-radio">
+                                    <input type="radio" id="status_1" name="status" value="1"{if $rs.status} checked{end} class="md-radiobtn">
+                                    <label for="status_1">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> 已赔付 </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="status_0" name="status" value="0"{if !$rs.status} checked{end} class="md-radiobtn">
+                                    <label for="status_0">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> 未处理 </label>
+                                </div>
+
+                            </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit">  提 交 </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="note note-info" style="margin-top: 20px;">
+    <h4 class="block fa fa-warning bold font-red"> 注意：</h4>
+    <p>选择“已赔付”选项按钮，理赔金额会自动进入客户账户，通知客户核查。</p>
+</div>
+<!-- inc:foot -->

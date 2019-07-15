@@ -1,0 +1,102 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=payment func=bank_list/}">转账管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>转账列表</span>
+        </li>
+    </ul>
+</div>
+<div class="page-bar">
+    <form class="navbar-form navbar-left" method="post" action="{url ctrl=payment func=bank_list /}">
+        <div class="form-group">
+            <input class="form-control" type="text" name="user" value="{$user}" placeholder="会员名">
+        </div>
+        <div class="form-group">
+            <input id="dateRange" class="form-control" type="text" name="dateRange" value="{$dateRange}" placeholder="日期范围"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-info" type="submit"><i class="fa fa-search"></i> 查 询 </button>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <thead>
+                    <tr>
+                        <th class="bold text-center">会员名</th>
+                        <th class="bold text-center">转账截图</th>
+                        <th class="bold text-center">金额</th>
+                        <th class="bold text-center">日期</th>
+                        <th class="bold text-center">状态</th>
+                        <th class="bold text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- loop from=$rslist key=$key value=$value -->
+                    <tr>
+                        <td class="text-center">{$value.user.user}</td>
+                        <td class="text-center">{if $value.vpic<>''}<a href="javascript:show_pic('{$value.vpic}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13"></a>{/if}</td>
+                        <td class="text-center">{$value.money}</td>
+                        <td class="text-center">{func date "Y-m-d H:i:s" $value.addtime}</td>
+                        <td class="text-center">{if $value.status}已处理{else}<span class="font-red">未处理</span>{/if}</td>
+                        <td class="text-center">
+                            {if $value.status==0}
+                            <a href="{url ctrl=payment func=bank_set id=$value.id /}" class="btn btn-xs btn-info">编辑</a>
+                            <!-- if $popedom.delete --><input type="button" value="删除" onclick="bank_delete('{$value.id}')" class="btn btn-xs btn-danger" /><!-- /if -->
+                            {else}已入账{/if}
+                        </td>
+                    </tr>
+                    <!-- /loop -->
+                    </tbody>
+                </table>
+                <!-- if $pagelist --><div class="text-right"><!-- include tpl=pagelist --></div><!-- /if -->
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script>
+	//日期范围
+    laydate.render({
+        elem: '#dateRange'
+        ,range: true
+    });
+    function bank_delete(id)
+    {
+        $.dialog.confirm('确定要删除转账凭证吗?<br />删除后您不能再恢复，请慎用<br /><span class="darkblue">删除成功后系统会自动刷新当前页面且不提示</span>',function(){
+            var url = get_url('payment','bank_delete','id='+id);
+            var rs = json_ajax(url);
+            if(rs.status == 'ok')
+            {
+                $.dsy.reload();
+            }
+            else
+            {
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+    function show_pic(id)
+    {
+        var url = get_url('claim','show_pic','id='+id);
+        var title = '转账凭证';
+        $.dialog.open(url,{
+            'title':title,
+            'lock':true,
+            'width':'350px',
+            'height':'350px',
+            'cancel':function(){
+                return true;
+            }
+        });
+    }
+</script>
+<!-- inc:foot -->

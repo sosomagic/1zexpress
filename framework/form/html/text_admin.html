@@ -1,0 +1,42 @@
+<input type="hidden" name="ext_form_id" id="ext_form_id" value="form_btn,width,ext_quick_words,ext_quick_type" />
+<table class="table table-striped table-bordered table-advance table-hover">
+    <tbody>
+    <tr>
+        <td class="text-right">扩展按钮：</td>
+        <td>
+            <select name="form_btn" id="form_btn">
+                <option value="">默认</option>
+                <option value="date"{if $rs.form_btn == "date"} selected{/if}>日期选择器</option>
+                <option value="datetime"{if $rs.form_btn == "datetime"} selected{/if}>日期时间选择器</option>
+                <option value="file"{if $rs.form_btn == "file"} selected{/if}>附件选择</option>
+                <option value="image"{if $rs.form_btn == "image"} selected{/if}>图片库</option>
+                <option value="video"{if $rs.form_btn == "video"} selected{/if}>影音列表</option>
+                <option value="url"{if $rs.form_btn == "url"} selected{/if}>网址</option>
+                <option value="user"{if $rs.form_btn == "user"} selected{/if}>会员</option>
+                <option value="color"{if $rs.form_btn == "color"} selected{/if}>颜色选择器</option>
+            </select>
+            <span class="help-block">设置文本框后跟随的按钮</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right">表单宽度：</td>
+        <td><input type="text" name="width" id="width" value="{$rs.width}"  style="width: 100%;" />
+            <span class="help-block">设置表单的宽度，这是只需要填写数字</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right">快捷内容：</td>
+        <td>
+            <textarea name="ext_quick_words" style="width:99%;height:180px;">{$rs.ext_quick_words}</textarea>
+            <span class="help-block">一行一个值，使用此项可以通过点击来实现快速输入</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right">快捷内容输入分割单词：</td>
+        <td>
+            <input type="text" name="ext_quick_type" id="ext_quick_type" value="{$rs.ext_quick_type}">
+            <span class="help-block">点击多个快捷输入，使用哪类单词分割，覆盖请设置：<span class="font-red" style="cursor:pointer;" onclick="$('#ext_quick_type').val('none')">none</span>，建议使用逗号<span class="font-red" style="cursor:pointer;" onclick="$('#ext_quick_type').val(',')">（,）</span>或是斜线<span class="font-red" style="cursor:pointer;" onclick="$('#ext_quick_type').val('/')">（/）</span></span>
+        </td>
+    </tr>
+    </tbody>
+</table>

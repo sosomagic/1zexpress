@@ -1,0 +1,30 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tbody>
+            <tr>
+                <td class="text-right" style="width: 140px;">运单号：</td>
+                <td>{$rs.sn}</td>
+            </tr>
+            <tr>
+                <td class="text-right">问题描述：</td>
+                <td>{$rs.content}</td>
+            </tr>
+            <tr>
+                <td class="text-right">备注：</td>
+                <td>{$rs.note}</td>
+            </tr>
+            <tr>
+                <td class="text-right">图片：</td>
+                <td>{if $rs.vpic}<img src="{$rs.file}" width="480" >{/if}</td>
+            </tr>
+            <tr>
+                <td class="text-right">管理员回复：</td>
+                <td>{$rs.adm_reply}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- include tpl=foot_open -->

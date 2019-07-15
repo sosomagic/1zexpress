@@ -1,0 +1,86 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <td class="text-right">附件分类：</td>
+                        <td>
+                            <select id="cate_id" name="cate_id" onchange="cate_change()">
+                                <!-- loop from=$catelist key=$key value=$value -->
+                                <option value="{$value.id}"{if $value.is_default} selected{/if} data="{$value.filetypes}" catename="{$value.title}">
+                                {$value.title}</option>
+                                <!-- /loop -->
+                            </select>
+                            <span class="help-block"><!-- if $value.typeinfos --> 支持上传格式：{$value.typeinfos}<!-- /if --></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">选择要上传的文件：</td>
+                        <td><div id="upload_picker" class=""></div>
+                            <span class="help-block">单个文件上传不能超过：{func get_cfg_var upload_max_filesize}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="content" id="upload_progress"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var obj_upload = {};
+    var obj = art.dialog.opener;
+    $(document).ready(function(){
+        cate_change();
+    });
+    function cate_change()
+    {
+        val = $("#cate_id").val();
+        if(!val){
+            $.dialog.alert('请选择要存储的目标分类');
+            return false;
+        }
+        var data = $("#cate_id option[value="+val+"]").attr('data');
+        var catename = $("#cate_id option[value="+val+"]").attr('catename');
+        obj_upload = new $.admin_upload({
+            "multiple"	: 'true',
+            "id" : "upload",
+            'pick':{'id':'#upload_picker','multiple':true},
+            'resize':false,
+            "swf" : "js/webuploader/uploader.swf",
+            "server": "{url ctrl=upload func=save/}",
+            "filetypes" : "{$rs.ext}",
+            'accept' : {'title':catename,'extensions':data},
+            "formData" :{'{func session_name}':'{func session_id}','cateid':val},
+            'fileVal':'upfile',
+            'sendAsBinary':true,
+            'auto':false,
+            "success":function(){
+                return true;
+            }
+        });
+        obj_upload.uploader.on('uploadFinished',function(){
+            $.dialog.alert('附件上传成功',function(){
+                obj.$.dsy.reload();
+            });
+        });
+    }
+    function save()
+    {
+
+        var f = $("#upload_progress .dsy-upfile-list").length;
+        if(f<1){
+            $.dialog.alert('请选择要上传的文件');
+            return false;
+        }
+        obj_upload.uploader.upload();
+        return false;
+    }
+    function cancel()
+    {
+        return obj_upload.uploader.stop();
+    }
+</script>
+<!-- include tpl=foot_open -->

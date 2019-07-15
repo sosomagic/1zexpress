@@ -1,0 +1,91 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('cate')}">分类管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>分类列表</span>
+        </li>
+    </ul>
+    <div class="pull-right" style="padding: 5px 10px 5px 0">
+        <a class="btn green" href="{echo admin_url('cate','set')}">
+            添加根分类
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1 bold">ID</th>
+                            <th class="col-md-5 bold">分类名</th>
+                            <th class="col-md-1 bold">排序</th>
+                            <th class="col-md-2 bold text-center">状态</th>
+                            <th class="col-md-3 bold">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- run:$tab_i = 0; -->
+                        <!-- foreach($rslist AS $key=>$value) -->
+                        <!-- run:$tab_i++ -->
+                        <tr>
+                            <td>{$value.id}</td>
+                            <td>
+                                <!-- for($i=1;$i<$value[_layer];$i++) -->
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <!-- /for -->
+                                <!-- if $value[_layer]>0 -->&nbsp;&nbsp;&nbsp;&nbsp;<span class="fa fa-file"></span><!-- else --><span class="fa fa-folder-open"></span><!-- /if --> {$value.title}<span class="font-blue"><i>（{$value.identifier}）</i></span>
+                            </td>
+                            <td>{$value.taxis}</td>
+                            <td class="text-center">{if $value.status}启用{else}<span class="font-red">禁用</span>{/if}</td>
+                            <td>
+                                <!-- if $popedom.add -->
+                                <button type="button" onclick="$.dsy.go('{url ctrl=cate func=set parent_id=$value.id/}')" class="btn btn-sm btn-warning" />
+                                <i class="fa fa-plus"></i> 添加子分类
+                                </button>
+                                <!-- /if -->
+                                <!-- if $popedom.modify -->
+                                <button onclick="$.dsy.go('{url ctrl=cate func=set id=$value.id/}')" class="btn btn-sm btn-success" />
+                                <i class="fa fa-edit"></i> 编辑
+                                </button>
+                                <!-- /if -->
+                                <!-- if $popedom.delete -->
+                                <button onclick="cate_delete('{$value.id}')" class="btn btn-sm btn-danger" />
+                                <i class="fa fa-times"></i> 删除
+                                </button>
+                                <!-- /if -->
+                            </td>
+                        </tr>
+                        <!-- /foreach -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{echo add_js('cate.js')}"></script>
+<script type="text/javascript">
+    function cate_delete(id)
+    {
+        $.dialog.confirm("{lang确定要删除此分类吗？}",function(){
+            var url = get_url("cate","delete");
+            url += "&id="+id;
+            var rs = $.dsy.json(url);
+            if(rs.status == "ok"){
+                $.dsy.reload();
+            }else{
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+
+</script>
+<!-- inc:foot -->

@@ -1,0 +1,200 @@
+<!-- include tpl=head menutitle=网站首页 -->
+<div id="carousel-example-generic" class="carousel slide banner" data-ride="carousel">
+    <!-- php:$list = dsy('picplayer') -->
+    <!-- if $list.total -->
+    <ol class="carousel-indicators">
+        <!-- loop from=$list.rslist key=$key value=$value id=listid-->
+        <li data-target="#carousel-example-generic" data-slide-to="{$listid.index}"{if $listid.index==0} class="active"{/if}></li>
+        <!-- /loop -->
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <!-- loop from=$list.rslist key=$key value=$value id=listid-->
+        <div class="item{if $listid.index==0} active{/if}"><a href="{$value.link}" target="{$value.target}" title="{$value.title}"><img src="{$value.pic.filename}" alt="{$value.title}"></a></div>
+        <!-- /loop -->
+    </div>
+    <!-- /if -->
+    <!--if !$session.user_name -->
+    <div class="login-c">
+        <div class="login-mask"></div>
+        <div class="login-container">
+            <div class="login-tt text-center">会员登录</div>
+            <form role="form" id="loginForm" method="post" onsubmit="return check_input()" action="{url ctrl=login func=ok/}">
+            <div class="login-relative">
+                <i class="login01"></i>
+                <input type="text" name="user" class="form-control login-input" placeholder="用户名" />
+            </div>
+            <div class="login-relative">
+                <i class="login01 login02"></i>
+                <input type="password" name="pass" class="form-control login-input" placeholder="登录密码" />
+            </div>
+            <!-- if $sys.is_vcode && function_exists("imagecreate") -->
+            <div class="login-relative">
+                <i class="login01 login03"></i>
+                <input type="text" name="_chkcode" id="_chkcode" class="form-control login-input login-input-xs" placeholder="验证码" />
+                <img id="vcode" title="点击切换验证码" class="btn btn-yzm btn-yzm-xs" style="cursor:pointer;">
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#vcode").dsy_vcode();
+                    $("#vcode").click(function(){
+                        $(this).dsy_vcode();
+                    });
+                });
+            </script>
+            <!-- /if -->
+            <button type="submit" class="btn btn-login" />登录</button>
+            </form>
+            <div class="clearfix login-link">
+                <div class="pull-left"><a href="{url ctrl=register/}">注册会员</a></div>
+                <div class="pull-right"><a href="{url ctrl=login func=getpass/}">忘记密码</a></div>
+            </div>
+        </div>
+    </div>
+    <!-- /if -->
+</div>
+<div class="link-back">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-xs-3"><a href="javascript:idcard_submit(0);void(0)"><img src="images/link01.png"><span>上传身份证</span></a></div>
+            <div class="col-xs-3"><a href="{url ctrl=usercp /}"><img src="images/link02.png"><span>在线缴税</span></a></div>
+            <div class="col-xs-3"><a href="{url ctrl=usercp /}"><img src="images/link03.png"><span>提供购物截图</span></a></div>
+            <div class="col-xs-3 after-no"><a href="javascript:qujian_submit(0);void(0)"><img src="images/link04.png"><span>上门取件</span></a></div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="search-c">
+        <input type="text" name="sn" id="sn" class="form-control" placeholder="请输入您要查找的运单号" />
+        <input id="start_search" type="button" class="btn btn-search" value="运单查询" />
+    </div>
+</div>
+<div class="news-back">
+    <div class="container">
+        <div class="row news-row">
+            <div class="col-xs-4">
+                <div class="news-tt">网站公告<a href="index.php?id=news&cate=notice">更多</a><i class="glyphicon glyphicon-triangle-bottom"></i></div>
+                <ul class="news-list">
+                    <!-- loop from=$notice key=$key value=$value id=listid -->
+                    <li class="news-li">
+                        <a href="index.php?id={$value.id}" title="{$value.title}">
+                            <div class="news-date"><span>{func date d $value.dateline}</span><br>{func date Y-m $value.dateline}</div>
+                            <div class="news-a-tt">{func dsy_cut $value.title 20 …}{if $listid.index==0}<span>NEW</span>{/if}</div>
+                            <div class="news-txt">{func dsy_cut $value.content 30 …}</div>
+                        </a>
+                    </li>
+                    <!-- /loop -->
+                </ul>
+            </div>
+            <div class="col-xs-4">
+                <div class="news-tt news-tt02">帮助中心<a href="index.php?id=news&cate=help">更多</a><i class="glyphicon glyphicon-triangle-bottom"></i></div>
+                <ul class="news-list">
+                    <!-- loop from=$help key=$key value=$value id=listid -->
+                    <li class="news-li02">
+                        <a href="index.php?id={$value.id}">
+                            <div class="news-date"><span>{func date d $value.dateline}</span><br>{func date Y-m $value.dateline}</div>
+                            <div class="news-a-tt">{func dsy_cut $value.title 20 …}{if $listid.index==0}<span>NEW</span>{/if}</div>
+                            <div class="news-txt">{func dsy_cut $value.content 30 …}</div>
+                        </a>
+                    </li>
+                    <!-- /loop -->
+                </ul>
+            </div>
+            <div class="col-xs-4">
+                <div class="news-tt news-tt03">行业新闻<a href="index.php?id=news&cate=industry">更多</a><i class="glyphicon glyphicon-triangle-bottom"></i></div>
+                <ul class="news-list">
+                    <!-- loop from=$news key=$key value=$value id=listid -->
+                    <li class="news-li02">
+                        <a href="index.php?id={$value.id}">
+                            <div class="news-date"><span>{func date d $value.dateline}</span><br>{func date Y-m $value.dateline}</div>
+                            <div class="news-a-tt">{func dsy_cut $value.title 20 …}{if $listid.index==0}<span>NEW</span>{/if}</div>
+                            <div class="news-txt">{func dsy_cut $value.content 30 …}</div>
+                        </a>
+                    </li>
+                    <!-- /loop -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="zy-tt"><span class="tt-txt">转运流程</span><span class="tt-lind"></span></div>
+    <ul class="lc-row text-center row">
+        <li>
+            <div class="lc-img"><img src="images/lc01.png"></div>
+            <div class="lc-tt">注册会员</div>
+            <div class="lc-txt">获取国外收货地址</div>
+        </li>
+        <li>
+            <div class="lc-img"><img src="images/lc02.png"></div>
+            <div class="lc-tt">轻松购物</div>
+            <div class="lc-txt">填写国外收货地址</div>
+        </li>
+        <li>
+            <div class="lc-img"><img src="images/lc03.png"></div>
+            <div class="lc-tt">包裹入库</div>
+            <div class="lc-txt">提交发货申请</div>
+        </li>
+        <li>
+            <div class="lc-img"><img src="images/lc04.png"></div>
+            <div class="lc-tt">仓库发货</div>
+            <div class="lc-txt">随时跟踪状态</div>
+        </li>
+        <li>
+            <div class="lc-img"><img src="images/lc05.png"></div>
+            <div class="lc-tt">坐等收货</div>
+            <div class="lc-txt">祝您生活愉快</div>
+        </li>
+    </ul>
+    <div class="zy-tt"><span class="tt-txt">合作伙伴</span><span class="tt-lind"></span></div>
+    <!-- php:$list = dsy('link') -->
+    <ul class="row hb-list">
+        <!-- loop from=$list.rslist key=$key value=$value -->
+        <li><a href="{$value.link}" target="{$value.target}"><img src="{$value.thumb.gd.auto}"></a></li>
+        <!-- /loop -->
+    </ul>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#start_search").click(function(){
+        var sn=$("#sn").val();
+        if(!sn){
+            $.dialog.alert("请填写运单号查询");
+            return false;
+        }
+        var arr = sn.split('\n');
+        if(arr.length>1){
+            $.dialog.alert("一次最多只能查询1个运单号");
+            return false;
+        }
+        var url = get_url('index','search','sn='+sn);
+        $.dialog.open(url,{
+            'title':'运单号：'+sn+'物流查询信息',
+            'width':'70%',
+            'height':'70%',
+            'lock':true
+        });
+        return false;
+    });
+});
+function idcard_submit(){
+    var url = get_url("index","idcard");
+    $.dialog.open(url,{
+        title: "上传身份证",
+        lock : true,
+        width: "600px",
+        height: "300px"
+    });
+    return false;
+}
+function qujian_submit(){
+    var url = get_url("index","delivery");
+    $.dialog.open(url,{
+        title: "免费预约上门取件",
+        lock : true,
+        width: "450px",
+        height: "100%"
+    });
+    return false;
+}
+</script>
+<!-- include tpl=foot -->

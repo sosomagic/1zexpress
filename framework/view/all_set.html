@@ -1,0 +1,66 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('all')}" title="返回全局维护">全局设置</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>{$rs.title}</span>
+            <!-- if $popedom.gset -->
+            <a href="{echo admin_url('all','gset')}&id={$id}" class="font-green-meadow">【维护设置】</a>
+            <!-- /if -->
+        </li>
+    </ul>
+</div>
+<form method="post" id="{$ext_module}" action="{echo admin_url('all','ext_save')}">
+    <input type="hidden" id="id" name="id" value="{$id}" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box grey">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <!-- loop from=$extlist key=$key value=$value -->
+                        <tr>
+                            <td class="text-right">{$value.title}<span class="font-blue">[{$value.identifier}]</span>：<!-- if $popedom.ext -->
+                                <a class="fa fa-edit" onclick="ext_edit('{$value.identifier}','{$ext_module}')"></a>&nbsp;&nbsp;<a class="fa fa-times" onclick="ext_delete('{$value.identifier}','{$ext_module}','{$value.title}')"></a>
+                                <!-- /if --></td>
+                            <td>{$value.html}
+                                <span class="help-block">{$value.note}</span></td>
+                        </tr>
+                        <!-- /loop -->
+                        <!-- if $popedom.ext -->
+                        <tr>
+                            <td class="text-right"></td>
+                            <td>
+                                <span id="_quick_insert"></span>
+                                <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        $.ajax({
+                                            'url':"{url ctrl=ext func=select type=all module=$ext_module/}",
+                                            'dataType':'html',
+                                            'cache':false,
+                                            'async':true,
+                                            'beforeSend': function (XMLHttpRequest){
+                                                XMLHttpRequest.setRequestHeader("request_type","html");
+                                            },
+                                            'success':function(rs){
+                                                $("#_quick_insert").html(rs);
+                                            }
+                                        });
+                                    });
+                                </script><input type="button" value="标准创建扩展字段" onclick="ext_add('{$ext_module}')" class="btn sbold uppercase btn-outline green-jungle" /></td>
+                        </tr>
+                        <!-- /if -->
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit"> 提 交 </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- inc:foot -->

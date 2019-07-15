@@ -1,0 +1,104 @@
+<!-- inc:head -->
+<div id="express_select_info" style="display: none">
+    <select id="code">
+        <!-- loop from=$codelist key=$key value=$value -->
+        <option value="{$value.id}">{$value.title}</option>
+        <!-- /loop -->
+    </select>
+</div>
+<script type="text/javascript">
+    function add_it()
+    {
+        var url = get_url('express','set');
+        $.dialog({
+            'title':"请选择快递接口引挈",
+            'content':document.getElementById("express_select_info"),
+            'ok':function(){
+                var code = $("#code").val();
+                if(!code){
+                    alert('请选择要创建的快递引挈');
+                    return false;
+                }
+                url += "&code="+code;
+                $.dsy.go(url);
+                return true;
+            },
+            'cancel':function(){},'cancelVal':'取消'
+        });
+    }
+    function edit_it(id)
+    {
+        $.dsy.go(get_url('express','set','id='+id));
+    }
+    function delete_it(id)
+    {
+        var text = $("#title_"+id).text();
+        $.dialog.confirm('确定要删除物流快递：<span class="font-red">'+text+'</span> 吗？',function(){
+            var url = get_url('express','delete','id='+id);
+            var rs = $.dsy.json(url);
+            if(rs.status == 'ok'){
+                $.dsy.reload();
+            }else{
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+</script>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('express')}" title="返回快递列表">快递管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>快递列表</span>
+        </li>
+    </ul>
+    <!-- if $popedom.add -->
+    <div class="pull-right" style="margin-bottom: 5px;margin-right: 10px;margin-top: 5px;" >
+        <a class="btn green" href="javascript:add_it();void(0);">
+            <i class="fa fa-plus"></i>
+            添加快递
+        </a>
+    </div>
+    <!-- /if -->
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-md-3 bold">快递名</th>
+                        <th class="col-md-3 bold">公司名</th>
+                        <th class="col-md-2 bold">官方网站</th>
+                        <th class="col-md-2 bold">接口</th>
+                        <th class="col-md-2 bold text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- loop from=$rslist key=$key value=$value -->
+                    <tr>
+                        <td id="title_{$value.id}">{$value.title}</td>
+                        <td>{$value.company}</td>
+                        <td><a href="{$value.url}" target="_blank">{$value.homepage}</a></td>
+                        <td>{$codelist[$value.code].title}</td>
+                        <td class="text-center">
+                            <button class="btn btn-xs btn-info" onclick="edit_it('{$value.id}')">
+                                <i class="fa fa-edit"></i> 编辑
+                            </button>
+                            <button class="btn btn-xs btn-danger" onclick="delete_it('{$value.id}')">
+                                <i class="fa fa-times"></i> 删除
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- /loop -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inc:foot -->

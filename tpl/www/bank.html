@@ -1,0 +1,128 @@
+<!-- include tpl=head_member title="转账操作" -->
+<!-- include tpl=nav -->
+<div class="page-container">
+    <!-- include tpl=block_usercp -->
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i><!-- if $type =='yh' -->银行转账<!-- else -->扫码支付<!--/if --></div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="tabbable tabbable-tabdrop">
+                                <div class="tab-content">
+
+                                    <div class="tab-pane active">
+                                        <form method="post" id="do_submit">
+                                            <!-- if $id --><input type="hidden" name="id" value="{$id}" /><!-- /if -->
+                                            <input type="hidden" name="type" value="{$type}" />
+											<input type="hidden" name="user_id" value="{$rs.user_id ? $rs.user_id : $session['user_id']}">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <tbody>
+                                                <!-- if $type =='yh' -->
+                                                <tr>
+                                                    <td class="text-right">请充值/转账到：</td>
+                                                    <td class="bold">
+                                                        卡　号：{$config.bank.card}<br>
+                                                        姓　名：{$config.bank.fullname}<br>
+                                                        开户行：{$config.bank.bank}
+                                                    </td>
+                                                </tr>
+                                                <!-- else -->
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <div class="row">
+                                                            <div class="text-center col-md-6 col-sm-6 col-xs-12">
+                                                                <img src="{$config.saoma.zfb}" height="200">
+                                                            </div>
+                                                            <div class="text-center col-md-6 col-sm-6 col-xs-12">
+                                                                <img src="{$config.saoma.wx}" height="200">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <!-- /if -->
+                                                <tr>
+                                                    <td class="text-right">金额：</td>
+                                                    <td>
+                                                        <input type="text" id="money" name="money" value="{$rs.money}" onkeyup="value=value.replace(/[^\d.]/g,'')" required> 人民币
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">转账截图：</td>
+                                                    <td>{$extlist.html}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <button class="btn blue" type="submit">
+                                                        <i class="fa fa-edit"></i>
+                                                        提交凭证
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var is_id = '{$id}';
+    var loading_action;
+    $(document).ready(function(){
+        $("#do_submit").submit(function(){
+            var money = $("#money").val();
+            if(!money){
+                $.dialog.alert("金额不能为空！");
+                return false;
+            }
+            var vpic = $("#vpic").val();
+            if(!vpic){
+                $.dialog.alert("请上转账截图！");
+                return false;
+            }
+            $(this).ajaxSubmit({
+                type:'post',
+                url: api_url('payment','bank'),
+                dataType:'json',
+                'beforeSubmit':function(){
+                    loading_action = $.dialog.tips('<img src="images/loading.gif" border="0" align="absmiddle" /> 正在保存数据，请稍候…').time(30).lock();
+                },
+                success: function(rs){
+                    if(loading_action){
+                        loading_action.close();
+                    }
+                    if(rs.status != 'ok'){
+                        if(!rs.content){
+                            rs.content = '提交失败';
+                        }
+                        $.dialog.alert(rs.content);
+                        return false;
+                    }
+                    //订单操作成功的提示
+                    if(is_id && is_id != '0'){
+                        $.dialog.alert('转账信息编辑成功',function(){
+                            $.dsy.go('{url ctrl=payment func=banklist /}');
+                        },'succeed');
+                    }else{
+                        $.dialog.alert('转账信息提交成功',function(){
+                            $.dsy.go('{url ctrl=payment func=banklist /}');
+                        },'succeed');
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!-- include tpl=foot_member -->

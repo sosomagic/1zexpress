@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<title>易源接口之快递查询</title>
+	<code>
+		<app_id>
+			<title>应用id</title>
+			<note>即showapi.com里的：appid</note>
+			<type>text</type>
+		</app_id>
+		<app_secret>
+			<title>密钥</title>
+			<note>即showapi.com里的secret</note>
+			<type>text</type>
+		</app_secret>
+		<app_com>
+			<title>快递公司</title>
+			<note>请选择要支持的快递公司</note>
+			<type>select</type>
+			<option>
+			<anneng>安能物流</anneng>
+			<dhl>DHL快递</dhl>
+			<debang>德邦物流</debang>
+			<ems>EMS</ems>
+			<fedexcn>Fedex联邦快递(国内)</fedexcn>
+			<fedex>Fedex联邦快递(国际)</fedex>
+			<gnxb>邮政小包</gnxb>
+			<guotong>国通快递</guotong>
+		    <huitong>百世快递</huitong>
+			<shunfeng>顺丰快递</shunfeng>
+			<shentong>申通快递</shentong>
+			<tiantian>天天快递</tiantian>
+			<ups>UPS快递</ups>
+			<usps>USPS快递</usps>
+			<yousu>优速快递</yousu>
+			<yuantong>圆通快递</yuantong>
+			<yunda>韵达快递</yunda>
+			<zhongtong>中通快递</zhongtong>
+			</option>
+		</app_com>
+	</code>
+</root>

@@ -1,0 +1,52 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('batch')}" title="返回批次列表">批次管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span><!-- if $id -->编辑<!-- else -->添加<!-- /if -->批次</span>
+        </li>
+    </ul>
+</div>
+<form method="post" action="{func admin_url batch setok}">
+    <input type="hidden" name="id" id="id" value="{$id}" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-2">批次名：</td>
+                            <td><input id="title" name="title" type="text" value="{$rs.title}" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span class="font-red"> * </span>仓库：</td>
+                            <td>
+                                <select class="form-control" id="stock" name="stock">
+                                    <option value="">所属仓库</option>
+                                    <!-- loop from=$stock key=$key value=$value -->
+                                    <option value="{$value.id}"{if $rs.stock_id==$value.id} selected{/if}>{$value.title}</option>
+                                    <!-- /loop -->
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">备注：</td>
+                            <td><textarea name="note" maxlength="100" class="form-control" rows="2">{$rs.note}</textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit">提 交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="{func add_js channel.js}"></script>
+<!-- inc:foot -->

@@ -1,0 +1,102 @@
+<!-- inc:head -->
+<!-- inc:nav -->
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <!-- inc:left -->
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+            <!-- BEGIN PAGE HEADER-->
+            <!-- BEGIN PAGE BAR -->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="{url ctrl=wealth/}" title="返回财富方案列表">财富方案</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <span>未审核</span>
+                    </li>
+                </ul>
+            </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="portlet box grey">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-bars"></i>未审核</div>
+                                <div class="tools">
+                                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <table class="table table-striped table-bordered table-advance table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>方案</th>
+                                        <th>会员</th>
+                                        <th>时间</th>
+                                        <th>财富</th>
+                                        <th>备注</th>
+                                        <th class="bold text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- loop from=$rslist key=$key value=$value -->
+                                    <tr>
+                                        <td>{$value.id}</td>
+                                        <td>{$value.w_title}</td>
+                                        <td>{$value.user}</td>
+                                        <td>{func date "Y-m-d H:i" $value.dateline}</td>
+                                        <td>{$value.val}{$value.w_unit}</td>
+                                        <td>{$value.note}</td>
+                                        <td class="text-center">
+                                            <input type="button" value="审核通过" onclick="check_it('{$value.id}','ok')" class="btn btn-xs btn-success" />
+                                            <input type="button" value="审核无效" onclick="check_it('{$value.id}','error')" class="btn btn-xs btn-danger" />
+                                        </td>
+                                    </tr>
+                                    <!-- /loop -->
+                                    </tbody>
+                                </table>
+                                <div class="text-right"><!-- include tpl=pagelist --></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<script type="text/javascript">
+    function check_it(id,type)
+    {
+        if(type == 'error'){
+            $.dialog.confirm('确定要此财富信息无效吗？确定后，数据将被删除！',function(){
+                var url = get_url('wealth','action','id='+id+"&action=error");
+                var rs = $.dsy.json(url);
+                if(rs.status == 'ok'){
+                    $.dsy.reload();
+                }else{
+                    $.dialog.alert(rs.content);
+                }
+            });
+        }else{
+            var url = get_url('wealth','action','id='+id+"&action=ok");
+            var rs = $.dsy.json(url);
+            if(rs.status == 'ok'){
+                $.dialog.alert('审核通过',function(){
+                    $.dsy.reload();
+                },'succeed');
+            }else{
+                $.dialog.alert(rs.content);
+            }
+        }
+    }
+</script>
+<!-- inc:foot -->

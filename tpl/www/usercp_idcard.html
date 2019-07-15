@@ -1,0 +1,117 @@
+<!-- include tpl=head_member title="上传身份证 - 账户设置" -->
+<!-- include tpl=nav -->
+<div class="page-container">
+    <!-- include tpl=block_usercp -->
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i>上传身份证</div>
+                        </div>
+                        <div class="portlet-body">
+                            <form enctype="multipart/form-data" id="upform" name="upform" action="" method="post">
+                                <input type="hidden" name="aid_1" id="aid_1" value=""/>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-right">收件人：</td>
+                                        <td><input type="text" id="title_aid_1" name="title_aid_1" class="input-small" disabled />&nbsp;&nbsp;<input type="button" value="选择收件人" class="btn btn-xs green" id="button_aid_1" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">身份证号码：</td>
+                                        <td><input type="text" id="idcard" name="idcard" value="" style="width: 100%"/>
+                                        </td>
+                                    </tr>
+                                    <!-- loop from=$extlist key=$key value=$value -->
+                                    <tr>
+                                        <td class="text-right">{$value.title}：</td>
+                                        <td>{$value.html}</td>
+                                    </tr>
+                                    <!-- /loop -->
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn blue" type="submit">
+                                            <i class="fa fa-edit"></i>
+                                            提 交
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="note note-info" style="margin-top: 20px;">
+                                <h4 class="block fa fa-warning bold font-red"> 注意：</h4>
+                                <p>友情说明：身份证照片为清关所用，照片需清晰，以免审核不通过，照片大小：350px*450px，请控制在300K以内。支持jpg、jpeg、png、gif、bmp格式，示例参考如图。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function save_order()
+    {
+        $("#upform").ajaxSubmit({
+            'url':api_url('usercp','save_idcard'),
+            'type':'post',
+            'dataType':'json',
+            'success':function(rs){
+                if(rs.status != 'ok'){
+                    if(!rs.content){
+                        rs.content = '提交失败';
+                    }
+                    $.dialog.alert(rs.content);
+                    return false;
+                }else{
+                    $.dialog.alert("提交成功",function(){
+                        $.dsy.reload();
+                    },'succeed');
+                }
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("#button_aid_1").click(function(){
+            var url = get_url("open","address") + "&id=1";
+            $.dialog.open(url,{
+                title: "收件人管理",
+                lock : true,
+                width: "700px",
+                height: "300px",
+                resize: false
+            });
+        });
+        $("#upform").submit(function(){
+            var idcard = $("#idcard").val();
+            if(!idcard){
+                $.dialog.alert("请填写身份证号码！");
+                return false;
+            }
+            var d = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+            if(!d.test(idcard)){
+                $.dialog.alert("身份证号码格式不对！");
+                return false;
+            }
+            var idcard_front = $("#idcard_front").val();
+            if(!idcard_front){
+                $.dialog.alert("请上传身份证正面照片！");
+                return false;
+            }
+            var idcard_back = $("#idcard_back").val();
+            if(!idcard_back){
+                $.dialog.alert("请上传身份证反面照片！");
+                return false;
+            }
+            save_order();
+            return false;
+        });
+    });
+</script>
+<!-- include tpl=foot_member -->

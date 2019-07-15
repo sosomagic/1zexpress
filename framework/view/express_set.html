@@ -1,0 +1,167 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=express /}" title="返回快递列表">快递管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span><!-- if $id -->编辑<!-- else -->添加<!-- /if -->快递</span>
+        </li>
+    </ul>
+    <div class="pull-right" style="padding: 10px;">参考教程：<a href="http://www.dsaiyin.com/thread-3-1-1.html" target="_blank"> http://www.dsaiyin.com/thread-3-1-1.html</a></div>
+</div>
+<form method="post" id="postsave">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box grey">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-2">快递名：</td>
+                            <td><input id="title" name="title" type="text" value="{$rs.title}" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right col-md-2">公司名：</td>
+                            <td><input id="company" name="company" type="text" value="{$rs.company}" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right col-md-2">官方网站：</td>
+                            <td><input id="homepage" name="homepage" type="text" value="{$rs.homepage}" class="form-control"/>
+                                <span class="help-block">请填写官方网站，建议以http://开头</span>
+                            </td>
+                        </tr>
+                        <!-- loop from=$extlist.code key=$key value=$value -->
+                        <!-- php:$valinfo = $rs.ext[$key] ? $rs.ext[$key] : $value.default -->
+                        <tr>
+                            <td class="text-right col-md-2">{$value.title}：</td>
+                            <td>
+                                <!-- if $value.type == 'radio' -->
+                                <div class="md-radio-inline">
+                                    <!-- loop from=$value.option key=$k value=$v -->
+                                    <div class="md-radio">
+                                        <input type="radio" id="{$k}" type="radio" name="{$code}_{$key}" value="{$k}"{if $valinfo == $k} checked{/if} >
+                                        <label for="{$k}">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> {$v} </label>
+                                    </div>
+                                    <!-- /loop -->
+                                </div>
+                                <!-- elseif $value.type == 'select' -->
+                                <select class="form-control" name="{$code}_{$key}" id="{$code}_{$key}">
+                                    <option value="">请选择...</option>
+                                    <!-- loop from=$value.option key=$k value=$v -->
+                                    <option value="{$k}"{if $valinfo == $k} selected{/if}>{$v}</option>
+                                    <!-- /loop -->
+                                </select>
+                                <!-- elseif $value.type == 'checkbox' -->
+                                <!-- php:$valinfo = $valinfo ? explode(',',$valinfo) : array() -->
+                                <div class="md-checkbox-inline">
+                                    <!-- loop from=$value.option key=$k value=$v -->
+                                    <div class="md-checkbox">
+                                        <input id="{$code}_{$k}" type="checkbox" name="{$code}_{$k}" value="{$k}"{if in_array($k,$valinfo)} checked{/if}>
+                                        <label for="{$code}_{$k}">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> {$v} </label>
+                                    </div>
+                                    <!-- /loop -->
+                                </div>
+                                <!-- else -->
+                                <!-- php:$input_name = $code.'_'.$key -->
+                                <!-- if $value.typebtn == 'file' -->
+                                {func form_edit $input_name $valinfo text form_btn=file&width=500}
+                                <!-- elseif $value.typebtn == 'image' -->
+                                {func form_edit $input_name $valinfo text form_btn=image&width=500}
+                                <!-- elseif $value.typebtn == 'video' -->
+                                {func form_edit $input_name $valinfo text form_btn=video&width=500}
+                                <!-- else -->
+                                <input type="text" id="{$code}_{$key}" name="{$code}_{$key}" class="form-control" value="{$valinfo}" />
+                                <!-- /if -->
+                                <!-- /if -->
+                                <span class="help-block">{$value.note}</span>
+                            </td>
+                        </tr>
+                        <!-- /loop -->
+                        <tr>
+                            <td class="text-right">运单查询频率：</td>
+                            <td>
+                                <div class="md-radio-inline">
+                                    <div class="md-radio">
+                                        <input type="radio" id="rate1" type="radio" name="rate" value="2"{if $rs.rate == 2} checked{/if} >
+                                        <label for="rate1">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 2小时 </label>
+                                    </div>
+                                    <div class="md-radio">
+                                        <input type="radio" id="rate2" type="radio" name="rate" value="2"{if $rs.rate == 4} checked{/if} >
+                                        <label for="rate2">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 4小时 </label>
+                                    </div>
+                                    <div class="md-radio">
+                                        <input type="radio" id="rate3" type="radio" name="rate" value="6"{if $rs.rate == 6} checked{/if} >
+                                        <label for="rate3">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 6小时 </label>
+                                    </div>
+                                    <div class="md-radio">
+                                        <input type="radio" id="rate4" type="radio" name="rate" value="8"{if $rs.rate == 8} checked{/if} >
+                                        <label for="rate4">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 8小时 </label>
+                                    </div>
+                                    <div class="md-radio">
+                                        <input type="radio" id="rate5" type="radio" name="rate" value="10"{if $rs.rate == 10 || !$rs.rate} checked{/if}>
+                                        <label for="rate5">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 10小时 </label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit"> 提 交 </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function submit_save()
+    {
+        $("#postsave").ajaxSubmit({
+            'url':get_url('express','save','id={$id}&code={$code}'),
+            'type':'post',
+            'dataType':'json',
+            'success':function(rs){
+                if(rs.status == 'ok'){
+                    $.dsy.go(get_url('express'));
+                }else{
+                    $.dialog.alert(rs.content);
+                    return false;
+                }
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("#postsave").submit(function(){
+            submit_save();
+            return false;
+        });
+    });
+</script>
+<!-- inc:foot -->

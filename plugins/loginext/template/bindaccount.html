@@ -1,0 +1,174 @@
+<!-- include tpl=head_member title="个人设置" -->
+<!-- include tpl=nav -->
+<div class="page-container">
+    <!-- include tpl=block_usercp -->
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i>账号绑定</div>
+                            <div class="tools">
+                                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-hover">
+                                <tbody>
+                                <tr>
+                                    <td class="font-bold text-center">登陆方式</td>
+                                    <td class="font-bold">说明</td>
+                                    <td class="font-bold"></td>
+                                    <td class="font-bold text-center">操作</td>
+                                </tr>
+                                <!-- if $qqlink -->
+                                <tr>
+                                    <td class="text-center"><img src="plugins/loginext/{#images#}/qq.png" /></td>
+                                    <td>绑定 QQ 号码，实现 QQ 一键登录，安全更快捷</td>
+                                    <!-- if $binder.qq -->
+                                    <td class="text-center">已设置</td>
+                                    <td class="text-center"><a href="javascript:unlock_action('qq','QQ');void(0);" class="btn btn-danger">解除</a></td>
+                                    <!-- else -->
+                                    <td class="font-red text-center"><span class="fa fa-close">未绑定</span></td>
+                                    <td class="text-center"><a href="{$qqlink}" class="btn btn-info">现在绑定</a></td>
+                                    <!-- /if -->
+                                </tr>
+                                <!-- /if -->
+                                <!-- if $wxlink -->
+                                <tr>
+                                    <td class="text-center"><img src="plugins/loginext/{#images#}/weixin.png" /></td>
+                                    <td>绑定微信号，使用微信扫一扫即可登录</td>
+                                    <!-- if $binder.weixin -->
+                                    <td class="text-center">已设置</td>
+                                    <td class="text-center"><a href="javascript:unlock_action('weixin','微信');void(0);" class="btn btn-danger">解除</a></td>
+                                    <!-- else -->
+                                    <td class="font-red text-center"><span class="fa fa-close">未绑定</span></td>
+                                    <td class="text-center"><a href="{$wxlink}" class="btn btn-info">现在绑定</a></td>
+                                    <!-- /if -->
+                                </tr>
+                                <!-- /if -->
+                                <!-- if $wblink -->
+                                <tr>
+                                    <td align="center"><img src="plugins/loginext/{#images#}/weibo.png" /></td>
+                                    <td>绑定新浪微博，登录更便捷</td>
+                                    <!-- if $binder.weibo -->
+                                    <td>已设置</td>
+                                    <td class="text-center"><a href="javascript:unlock_action('weibo','微博');void(0);" class="btn btn-danger">解除</a></td>
+                                    <!-- else -->
+                                    <td class="font-red text-center"><span class="fa fa-close">未绑定</span></td>
+                                    <td class="text-center"><a href="{$wxlink}" class="btn btn-info">现在绑定</a></td>
+                                    <!-- /if -->
+                                </tr>
+                                <!-- /if -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i>自定义设置</div>
+                            <div class="tools">
+                                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <form method="post" id="setsubmit">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-right">发货仓库：</td>
+                                        <td>
+                                            <select class="form-control" id="stock" name="stock">
+                                                <option value="">请选择发货仓库</option>
+                                                <!-- loop from=$stock key=$key value=$value -->
+                                                <option value="{$value.id}"{if $rs.stock_id==$value.id} selected="selected"{/if}>{$value.title}</option>
+                                                <!-- /loop -->
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right col-md-2">发货渠道：</td>
+                                        <td>
+                                            <select class="form-control" name="channel" id="channel">
+                                                <option value="">请选择发货渠道</option>
+                                                <!-- loop from=$channel_list key=$key value=$value -->
+                                                <option value="{$value.id}"{if $rs.channel_id==$value.id} selected="selected"{/if}>{$value.title}</option>
+                                                <!-- /loop -->
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right col-md-2">短信通知：</td>
+                                        <td>
+                                            <input id="sms" name="sms" type="checkbox" class="make-switch"  data-on-text="<i class='fa fa-check'></i>" data-off-text="<i class='fa fa-times'></i>" data-size="small" value="1"{if $rs.sms} checked{/if}>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right col-md-2">邮件通知：</td>
+                                        <td>
+                                            <input id="mail" name="mail" type="checkbox" class="make-switch"  data-on-text="<i class='fa fa-check'></i>" data-off-text="<i class='fa fa-times'></i>" data-size="small" value="1"{if $rs.mail} checked{/if}>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn blue" type="submit">
+                                            <i class="fa fa-edit"></i>
+                                            提 交
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function unlock_action(type,tip)
+    {
+        $.dialog.confirm('确定要解除'+tip+'绑定吗？',function(){
+            var url = api_plugin_url('loginext','unbindaccount','type='+type);
+            var rs = $.dsy.json(url);
+            if(rs.status){
+                $.dialog.alert('成功解除'+tip+'绑定',function(){
+                    $.dsy.reload();
+                },'succeed');
+            }else{
+                $.dialog.alert(rs.info);
+            }
+        })
+    }
+    $(document).ready(function(){
+        $("#setsubmit").submit(function(){
+            $(this).ajaxSubmit({
+                type:'post',
+                url: api_url('usercp','set'),
+                dataType:'json',
+                success: function(rs){
+                    if(rs.status == 'ok'){
+                        $.dialog.alert("自定义信息设置成功",function(){
+                            $.dsy.reload();
+                            //$.dsy.go('{url ctrl=usercp /}');
+                        },'succeed');
+                    }else{
+                        $.dialog.alert(rs.content);
+                        return false;
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!-- include tpl=foot_member -->

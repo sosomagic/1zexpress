@@ -1,0 +1,98 @@
+<!-- inc:head -->
+<script type="text/javascript" src="{func add_js order.js}"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    function update_keywords(val){
+        if(val == 'time'){
+            $("#keywords").bind("focus",function(){
+                laydate();
+            }).val('');
+        }else{
+            $("#keywords").unbind('focus').val('');
+        }
+    }
+</script>
+<div class="tips">
+    您当前位置：<a href="{url ctrl=package func=manage/}" title="问题件处理">问题件处理</a> &raquo; 问题件列表
+</div>
+</tr>
+</table>
+</div>
+<div class="tips">
+    <form method="post" action="{url ctrl=package func=manage/}">
+        <div style="float:left;width:800px;">
+            <div><table>
+                <tr>
+                    <td>{lang仓库：}</td>
+                    <td>
+                        <select name="stock">
+                            <option value="">到货仓库…</option>
+                            <!-- loop from=$stocks key=$key value=$value -->
+                            <option value="{$value.id}"{if $stock==$value.id} selected{/if}>{$value.title}</option>
+                            <!-- /loop -->
+                        </select>
+                    </td>
+                    <td>&nbsp; &nbsp;{lang时间：}</td>
+                    <td><input type="text" name="date_start" value="{$date_start}" placeholder="开始时间" onfocus="laydate()" style="width:110px;" /></td>
+                    <td>{lang至}</td>
+                    <td><input type="text" name="date_stop" value="{$date_stop}" placeholder="结束时间" onfocus="laydate()" style="width:110px;" /></td>
+                </tr>
+            </table></div>
+            <table>
+                <tr>
+                    <td>
+                        <select name="keytype" onchange="update_keywords(this.value)">
+                            <option value="">检索类型…</option>
+                            <option value="sn"{if $keytype == 'sn'} selected{/if}>{lang包裹单号}</option>
+                            <option value="user_id"{if $keytype == 'user_id'} selected{/if}>{lang会员ID号}</option>
+                            <option value="ucode"{if $keytype == 'ucode'} selected{/if}>{lang入库识别码}</option>
+                            <option value="wt"{if $keytype == 'wt'} selected{/if}>{lang包裹重量}</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="keywords" name="keywords" class="default" value="{$keywords}"{if $keytype == 'time'} onfocus="laydate()"{/if} /></td>
+                </tr>
+            </table>
+        </div>
+        <div style="float:left;width:20%;margin-top:25px;"><input type="submit" value="提交搜索" class="submit2" style="cursor: pointer"/></div>
+    </form>
+    <div class="clear"></div>
+</div>
+
+<table width="100%" class="list" cellpadding="0" cellspacing="0">
+    <tr>
+        <th width="50px">ID</th>
+        <th class="lft">&nbsp;包裹单号</th>
+        <th class="lft">&nbsp;会员名ID</th>
+        <th>入库识别码</th>
+        <th class="lft">&nbsp;仓库</th>
+        <th class="lft">&nbsp;重量</th>
+        <th>费用</th>
+        <th width="130px">创建时间</th>
+        <th>状态</th>
+        <th width="198px">操作</th>
+    </tr>
+    <!-- loop from=$rslist key=$key value=$value id=$tmpid -->
+    <tr>
+        <td align="center">{$value.id}</td>
+        <td><a href="{url ctrl=package func=info id=$value.id /}">{$value.sn}</a></td>
+        <td>{$value.user}({$value.user_id})</td>
+        <td align="center">{$value.ucode}</td>
+        <td>{$value.stock_list.title}</td>
+        <td>{$value.wt}</td>
+        <td align="center">{if $value.status=='0'}--{else}{func price_format $value.price $value.currency_id}{/if}</td>
+        <td align="center">{func date "Y-m-d H:i" $value.addtime}</td>
+        <td align="center">{$value.ext}</td>
+        <td align="center">
+            <div class="button-group">
+                <!-- if $popedom.modify -->
+                <input type="button" value="编辑" onclick="package_edit2({$value.id})" class="dsy-btn" />
+                <!-- /if -->
+                <!-- if $popedom.delete -->
+                <input type="button" value="{lang删除}" onclick="package_delete({$value.id},'{$value.sn}')" class="dsy-btn" />
+                <!-- /if -->
+            </div>
+        </td>
+    </tr>
+    <!-- /loop -->
+</table>
+<!-- inc:foot -->

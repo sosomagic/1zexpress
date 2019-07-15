@@ -1,0 +1,126 @@
+<!-- inc:head -->
+<!-- inc:nav -->
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <!-- inc:left -->
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+            <!-- BEGIN PAGE HEADER-->
+            <!-- BEGIN PAGE BAR -->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="{url ctrl=wealth/}">财富方案</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <span>{$rs.title}明细</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="icon-settings font-red"></i>
+                                <span class="caption-subject font-red sbold uppercase">积分明细</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-advance table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="bold">会员账号</th>
+                                    <th class="bold">{$rs.title}</th>
+                                    <th class="bold">最后记录时间</th>
+                                    <th class="bold text-center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- loop from=$rslist key=$key value=$value -->
+                                <tr>
+                                    <td>{$value.user}</td>
+                                    <td>{$value.val}{$rs.unit}</td>
+                                    <td>{func date "Y-m-d H:i" $value.lasttime}</td>
+                                    <td class="text-center">
+                                        <input type="button" value="{lang日志}" onclick="show_log('{$value.uid}')" class="btn btn-xs btn-info" />
+                                        <input type="button" value="{lang赚送}" onclick="action_wealth('{$value.uid}','+')" class="btn btn-xs btn-warning" />
+                                        <input type="button" value="{lang扣除}" onclick="action_wealth('{$value.uid}','-')" class="btn btn-xs btn-danger" />
+                                    </td>
+                                </tr>
+                                <!-- /loop -->
+                                </tbody>
+                            </table>
+                            <div class="text-right"><!-- include tpl=pagelist --></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<script type="text/javascript">
+    function show_log(uid)
+    {
+        var url = '{url ctrl=wealth func=log wid=$rs.id/}&uid='+uid;
+        $.dialog.open(url,{
+            'title':'{$rs.title}日志',
+            'lock':true,
+            'width':'500px',
+            'height':'400px',
+            'ok':function(){
+                return true;
+            },
+            'okVal':'关闭'
+        });
+    }
+    function action_wealth(uid,type)
+    {
+        var title = type == '+' ? '赚送会员{$rs.title}' : '扣除会员{$rs.title}';
+        var lft = type == '+' ? '赚送' : '扣除';
+        $.dialog({
+            'title':title,
+            'lock':true,
+            'content':lft+'：<input type="text" style="width:70px" id="a_val" /> {$rs.unit}<br /><br />{lang说明}：<input type="text" id="a_note" value="" style="width:300px" />',
+            'ok':function(){
+                var url = get_url('wealth','val','wid={$rs.id}&uid='+uid);
+                var note = $("#a_note").val();
+                if(!note){
+                    $.dialog.alert('请填写相关说明');
+                    return false;
+                }
+                url += "&note="+$.str.encode(note);
+                var val = $("#a_val").val();
+                if(!val || (val && parseInt(val)<=0)){
+                    $.dialog.alert('请填写数值，数值必须大于0');
+                    return false;
+                }
+                url += "&val="+val;
+                url += "&type="+type;
+                var rs = $.dsy.json(url);
+                if(rs.status == 'ok'){
+                    $.dialog.alert('操作成功',function(){
+                        $.dsy.reload();
+                        return true;
+                    },'succeed');
+                }else{
+                    $.dialog.alert(rs.content);
+                    return false;
+                }
+            },
+            'okVal':'提交',
+            'cancel':function(){
+                return true;
+            }
+        });
+    }
+</script>
+<!-- inc:foot -->

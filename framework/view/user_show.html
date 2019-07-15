@@ -1,0 +1,34 @@
+<!-- inc:head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <td class="text-right" style="width: 20%">会员名：</td>
+                        <td>{$rs.user}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">邮箱：</td>
+                        <td>{$rs.email}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">手机：</td>
+                        <td>{$rs.mobile}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">会员组：</td>
+                        <td>{$grouplist.title}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">余额：</td>
+                        <td>{$rs['wealth']['wallet']['val']} 美元 </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inc:foot_open -->

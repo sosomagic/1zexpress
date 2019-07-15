@@ -1,0 +1,30 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tbody>
+            <tr>
+                <td class="text-right" style="width:120px;">理赔类型：</td>
+                <td>{$rs.type}</td>
+            </tr>
+            <tr>
+                <td class="text-right">理赔运单号：</td>
+                <td>{$rs.sn}</td>
+            </tr>
+            <tr>
+                <td class="text-right">理赔说明：</td>
+                <td>{$rs.detail}</td>
+            </tr>
+            <tr>
+                <td class="text-right">理赔要求：</td>
+                <td>{$rs.note}</td>
+            </tr>
+            <tr>
+                <td class="text-right">理赔凭证：</td>
+                <td><img src="{$rs.file}" width="480" ></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- include tpl=foot_open -->

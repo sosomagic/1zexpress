@@ -1,0 +1,89 @@
+<!-- include tpl=head_open -->
+<script type="text/javascript">
+    var backurl = "{$backurl}";
+    function save()
+    {
+        var loading_action;
+        var opener = $.dialog.opener;
+        var type = $('input:radio[name="type"]:checked').val();
+        if(type == null){
+            $.dialog.alert('请选择余额调整类型');
+            return false;
+        }
+        var num = $("input[name=val]").val();
+        if(!num || (num && parseFloat(num)<=0)){
+            $.dialog.alert('未填写金额');
+            return false;
+        }
+        var note = $("input[name=note]").val();
+        if(!note || note == 'undefined'){
+            $.dialog.alert('未填写备注');
+            return false;
+        }
+        $("#post_save").ajaxSubmit({
+            'url':get_url('wealth','val'),
+            'type':'post',
+            'dataType':'json',
+            'beforeSubmit':function(){
+                loading_action = $.dialog.tips('<img src="images/loading.gif" border="0" align="absmiddle" /> 正在保存数据，请稍候…').time(30).lock();
+            },
+            'success':function(rs){
+                if(loading_action){
+                    loading_action.close();
+                }
+                if(rs.status){
+                    $.dialog.alert('操作成功',function(){
+                        opener.$.dsy.reload();
+                    },'succeed');
+                }else{
+                    $.dialog.alert(rs.content);
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <form method="post" id="post_save" onsubmit="return false">
+                    <input type="hidden" name="wid" id="wid" value="{$rs.id}" />
+                    <input type="hidden" name="uid" id="uid" value="{$uid}" />
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="md-radio-inline">
+                                    <div class="md-radio">
+                                        <input type="radio" name="type" id="type1" value="+">
+                                        <label for="type1">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 增加 </label>
+                                    </div>
+                                    <div class="md-radio">
+                                        <input type="radio" name="type" id="type0" value="-">
+                                        <label for="type0">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> 减少 </label>
+                                    </div>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input class="form-control" type="text" name="val" id="val" value="" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="金额(美元)"></td>
+                        </tr>
+                        <tr>
+                            <td><input class="form-control" type="text" name="note" id="note" value="" placeholder="备注"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- include tpl=foot_open -->

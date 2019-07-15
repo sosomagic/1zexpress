@@ -1,0 +1,193 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=package/}">包裹管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>包裹列表</span>
+        </li>
+    </ul>
+</div>
+<div class="page-bar" style="padding-left:8px;padding-right:8px;">
+    <form class="navbar-form navbar-left" method="post" action="{func admin_url package}">
+        <div class="row">
+            <div class="form-group">
+                <select name="status" class="form-control">
+                    <option value="">请选择包裹状态</option>
+                    <!-- loop from=$statuslist key=$key value=$value id=$tmpid -->
+                    <option value="{$key}"{if $status==$key && $status!=''} selected{/if}>{$value}</option>
+                    <!-- /loop -->
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="stock" name="stock" class="form-control">
+                    <option value="">到货仓库…</option>
+                    <!-- loop from=$stocks key=$key value=$value -->
+                    <option value="{$value.id}"{if $stock==$value.id} selected{/if}>{$value.title}</option>
+                    <!-- /loop -->
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="fullname" value="{$fullname}" placeholder="收件人" />
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="sn" value="{$sn}" placeholder="包裹单号" />
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="ucode" value="{$ucode}" placeholder="会员编号" />
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="user" value="{$user}" placeholder="会员名" />
+            </div>
+            <div class="form-group">
+                <input id="dateRange" class="form-control" type="text" name="dateRange" value="{$dateRange}" placeholder="日期范围"/>
+            </div>
+            <div class="form-group">
+                <button class="btn blue" type="submit"><i class="fa fa-search"></i> 查 询 </button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs">
+                        <li class="{if $status == ''}active {/if}bold">
+                            <a href="javascript:void(0)" onclick="tab('')">全部包裹<span class="badge badge-success">{$sum}</span></a>
+                        </li>
+                        <!-- loop from=$statuslist key=$key value=$value -->
+                        <li class="{if $status==$key && $status!=''}active {/if}bold">
+                            <a href="javascript:void(0)" onclick="tab('{$key}')">{$value}<span class="badge badge-success"> {$count[$key]}</span></a>
+                        </li>
+                        <!-- /loop -->
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-advance table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="bold">&nbsp;</th>
+                                        <th class="bold text-center">包裹单号</th>
+                                        <th class="bold text-center">收件人</th>
+                                        <th class="bold text-center">仓库/仓位</th>
+                                        <th class="bold text-center">入库重量</th>
+                                        <th class="bold text-center">预报/入库时间</th>
+                                        <th class="bold text-center">会员</th>
+                                        <th class="bold text-center">备注</th>
+                                        <th class="bold text-center">状态</th>
+                                        <th class="bold text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- loop from=$rslist key=$key value=$value id=$tmpid -->
+                                    <tr>
+                                        <td class="text-center">
+                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                <input class="checkboxes" id="id_{$value.id}" name="ids[]" value="{$value.id}" type="checkbox">
+                                                <span></span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center"><a href="{url ctrl=package func=info id=$value.id /}">{$value.sn}</a><br><a onclick="showtr('trshow{$key+1}','imgsrc{$key+1}');"><img id="imgsrc{$key+1}" src="tpl/www/images/arrow_down1.png"></a></td>
+                                        <td class="text-center">{$value.fullname}</td>
+                                        <td class="text-center">{$value.stock_list.title}<br><span class="font-blue-oleo">{$value.position}</span></td>
+                                        <td class="text-center">{$value.jingzhong}</span></td>
+                                        <td class="text-center"><!-- if $value.addtime-->{func date "Y-m-d H:i" $value.addtime}<!-- else -->--<!-- /if --><br><span class="font-blue-oleo"><!-- if $value.rukutime-->{func date "Y-m-d H:i" $value.rukutime}<!-- else -->--<!-- /if --></span></td>
+                                        <td class="text-center">{$value.user}<br><span class="font-blue-oleo">{$value.ucode}</span></td>
+                                        <td>{$value.note}</td>
+                                        <td class="text-center">{$statuslist[$value.status]}</td>
+                                        <td class="text-center">
+                                            <!-- if $popedom.modify && $value.status!='generated'-->
+                                            <a href="{url ctrl=package func=set id=$value.id/}" class="btn btn-xs blue">编辑</a>
+                                            <!-- /if -->
+                                            <!-- if $popedom.delete && $value.status!='generated' -->
+                                            <input type="button" value="删除" onclick="package_delete({$value.id},'{$value.sn}')" class="btn btn-xs btn-danger" />
+                                            <!-- /if -->
+                                            {if $value.status=='generated'}
+                                                        <span class="font-blue">
+                                                        <!-- loop from=$value.order key=$k value=$v -->
+                                                        <a href="{url ctrl=order func=info id=$v.id/}">{$v.sn }</a>
+                                                        <!-- /loop -->
+                                                    </span>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                    <tr id="trshow{$key+1}" style="display:none">
+                                        <td colspan="10" align="left">
+                                            <div class="modal_border">
+                                                <strong>物品：</strong>
+                                                <!-- if $value.pros -->
+                                                <!-- loop from=$value.pros key=$k value=$v -->
+                                                {$v.title}X{$v.qty}；
+                                                <!-- /loop -->
+                                                <!-- /if -->
+                                            </div>
+                                            <!-- if $value.note -->
+                                            <div class="modal_border">
+                                                <strong>备注：</strong>
+                                                {$value.note}
+                                            </div>
+                                            <!-- /if -->
+                                        </td>
+                                    </tr>
+                                    <!-- /loop -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-inline">
+                                <div class="form-group">
+                                    <input type="button" value="全选" class="btn btn-xs btn-danger" onclick="$.input.checkbox_all()" />
+                                    <input type="button" value="全不选" class="btn btn-xs btn-success" onclick="$.input.checkbox_none()" />
+                                    <input type="button" value="反选" class="btn btn-xs btn-warning" onclick="$.input.checkbox_anti()" />
+                                </div>
+                                <div class="form-group">
+                                    <select id="list_action_val"  onchange="update_select()">
+                                        <option value="">选择要执行的动作</option>
+                                        <!-- if $popedom.delete -->
+                                        <option value="delete">批量删除</option>
+                                        <!-- /if -->
+                                    </select>
+                                </div>
+                                <div class="form-group" id="plugin_button"><input type="button" value="执行操作" onclick="list_action_exec()" class="btn btn-xs blue" /></div>
+                            </div>
+                            <div class="col-md-6 text-right"><!-- include tpl=pagelist --></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{func add_js order.js}"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    //日期范围
+    laydate.render({
+        elem: '#dateRange'
+        ,range: true
+    });
+    function tab(status){
+        var url;
+        url = get_url('package','index','status='+status);
+        //window.location.href=url;
+        direct(url);
+    }
+    function showtr(trshow,imgsrc){
+        var trid=$('#'+trshow);
+        var imgid=$('#'+imgsrc);
+        if(trid.is(":hidden")){
+            trid.show();    //如果元素为隐藏,则将它显现
+            imgid.attr("src", "tpl/www/images/arrow_up.png");
+        }else{
+            trid.hide();     //如果元素为显现,则将其隐藏
+            imgid.attr("src", "tpl/www/images/arrow_down1.png");
+        }
+    }
+</script>
+<!-- inc:foot -->

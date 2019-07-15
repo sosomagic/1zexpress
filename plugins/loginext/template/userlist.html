@@ -1,0 +1,38 @@
+<script type="text/javascript">
+function loginext_joinuser(main_name)
+{
+	var url = get_url('plugin','exec','id=loginext&exec=joinuser');
+	if(main_name && main_name != 'undefined'){
+		url += "&m_account="+$.str.encode(main_name);
+	}
+	$.dialog.open(url,{
+		'title':'合并会员操作',
+		'lock':true,
+		'width':'375px',
+		'height':'158px',
+		'okVal':'合并会员',
+		'ok':function(){
+			var iframe = this.iframe.contentWindow;
+			if (!iframe.document.body) {
+				alert('iframe还没加载完毕呢');
+				return false;
+			};
+			iframe.save();
+			return false;
+		},
+		'cancelVal':'取消',
+		'cancel':true
+	});
+}
+$(document).ready(function(){
+	$(".tips .action").after('<div class="action"><a href="javascript:loginext_joinuser()">合并会员操作</a></div>');
+	$("table.list tr th:last").css("width","180px");
+	$("table.list tr").each(function(i){
+		var id = $(this).find('td').eq(0).text();
+		var name = $(this).find('td').eq(3).text();
+		if(parseInt(id)>0){
+			$(this).find('td:last').find('.button-group input[value=编辑]').after('<input type="button" value="合并会员" class="dsy-btn" onclick="loginext_joinuser(\''+$.trim(name)+'\')" />');
+		}
+	});
+});
+</script>

@@ -1,0 +1,119 @@
+.dsy-win {
+	width:100%;
+	z-index:999;
+	position:fixed;
+	left:0;
+	top:0;
+	cursor: default;
+	font-family:"Microsoft Yahei","宋体","Arial","Tahoma";
+	background:#fff;
+}
+.dsy-win .window {
+	background:#63b4fb;
+	border:1px solid #4c8ac0;
+	padding-bottom:5px;
+}
+.dsy-win-lock{
+	width:100%;
+	height:100%;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index: 998;
+	background:#fff;
+	opacity:0.5;
+	filter:"alpha(opacity=50)";
+	filter:alpha(opacity=50);
+	zoom:1;
+}
+/* 移动弹层时创建一个DIV层 */
+.dsy-win-vlayer{
+	position:absolute;
+	left:0;
+	top:0;
+	background:#000;
+	opacity:0.5;
+	filter:"alpha(opacity=50)";
+	filter:alpha(opacity=50);
+	zoom:1;
+}
+.dsy-win .body{ background:#f0f0f0; border:1px solid #5499d6; margin:0 5px; padding:0; overflow:hidden;}
+.dsy-win .body .red{color:red;}
+.dsy-win .body .darkblue{color:darkblue;}
+.dsy-win .body .main {
+	padding:0;
+	margin:0;
+	overflow:hidden;
+	width:auto;
+	height:auto;
+	min-width:10px;
+	min-height:10px;
+	background:none;
+}
+.dsy-win .window .title{ height:30px; position:relative;overflow:hidden;}
+.dsy-win .window .title h3.h3 {
+	line-height:30px;
+	position:absolute;
+	width:100%;
+	top:0;
+	margin:0;
+	padding:0;
+	font-size:16px;
+	font-weight:normal;
+	text-align:center;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+}
+.dsy-win .window .title div.button{ position:absolute; top:0; right:6px; height:20px;}
+.dsy-win .window .title div.button ul{margin:0;padding:0;list-style:none;}
+.dsy-win .window .title div.button ul li{ float:left; margin-left:2px;list-style:none;}
+.dsy-win .window .title div.button ul li.close a{ width:45px; height:20px; background:url('images/button.png') 19px 7px no-repeat #c75050; display:block;}
+.dsy-win .window .title div.button ul li.close a:hover{ background-color:#e25959;}
+.dsy-win .window .title div.button ul li.min a{ width:18px; height:20px; background:url('images/button.png') 5px -108px no-repeat; display:block;}
+.dsy-win .window .title div.button ul li.min a:hover{ background-color:#0000FF;}
+.dsy-win .window .title div.button ul li.max-max a{ width:20px; height:20px; background:url('images/button.png') 5px -34px no-repeat; display:block;}
+.dsy-win .window .title div.button ul li.max-max a:hover{ background-color:#0000FF;}
+.dsy-win .window .title div.button ul li.max a{ width:20px; height:20px; background:url('images/button.png') 5px -76px no-repeat; display:block;}
+.dsy-win .window .title div.button ul li.max a:hover{ background-color:#0000FF;}
+
+
+.dsy-win .body .main .prompt{ background:#fff; overflow:hidden;}
+.dsy-win .body .main .prompttable{ margin:10px;}
+.dsy-win .body .main .prompttable td{ padding:5px;}
+.dsy-win .body .main .promptbtn{ background:#f0f0f0; border-top:1px solid #cacaca; padding:10px; overflow:hidden;}
+
+.dsy-win .body .main div.promp-button {
+	background:#f0f0f0;
+	border-top:1px solid #cacaca;
+	padding:10px;
+	overflow:hidden;
+}
+.dsy-win .body .main  div.promp-button input{ float:right; margin-left:10px;}
+.dsy-win .body .main div.promp-button input.submit{
+	height:30px;
+	line-height:30px;
+	background:#d81313;
+	padding:0 15px;
+	font-size:14px;
+	color:#fff;
+	border:none 0;
+	cursor:pointer;
+	overflow:visible;
+}
+.dsy-win .body .main div.promp-button input.button{
+	height:30px;
+	line-height:30px;
+	background:#e6e6e6;
+	padding:0 15px;
+	font-size:14px;
+	color:#000;
+	cursor:pointer;
+	background:-webkit-gradient(linear, 0 0, 0 100%, from(#f0f0f0), to(#e6e6e6));
+	background:-moz-linear-gradient(top, #f0f0f0, #e6e6e6);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f0f0f0', endColorstr='#e6e6e6', GradientType=0);
+	border:1px solid #cacaca;
+	overflow:visible;
+}
+.dsy-win .body .content{padding:0;margin:0;}
+.dsy-win .body .main iframe.content{ border:1px solid #adadad;}

@@ -1,0 +1,30 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>{$rs.title}</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- loop from=$rslist key=$key value=$value -->
+                    <tr>
+                        <td>{func date "Y-m-d H:i" $value.dateline}</td>
+                        <td>{$value.val}{$rs.unit}</td>
+                        <td>{$value.note}</td>
+                    </tr>
+                    <!-- /loop -->
+                    </tbody>
+                </table>
+                <div class="text-right"><!-- include tpl=pagelist --></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- include tpl=foot_open -->

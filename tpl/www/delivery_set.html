@@ -1,0 +1,219 @@
+<!-- include tpl=head_member title="上门取件" -->
+<!-- include tpl=nav -->
+<div class="page-container">
+    <!-- include tpl=block_usercp -->
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i><!-- if $id -->修改<!-- else -->预约<!-- /if -->上门取件</div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="tabbable tabbable-tabdrop">
+                                <ul class="nav nav-tabs" style="margin-bottom:0px;">
+                                    <li class="{if $sys.func == 'delivery'}active {/if}bold">
+                                        <a href="javascript:void(0)" onclick="tab('delivery')">预约取件</a>
+                                    </li>
+                                    <li class="{if $sys.func == 'delivery_list'}active {/if}bold">
+                                        <a href="javascript:void(0)" onclick="tab('delivery_list')">我的取件</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" style="border: 1px solid #ddd;border-top: none;padding:10px;">
+
+                                    <div class="tab-pane active">
+                                        {if $sys.func == 'delivery'}
+                                        <form method="post" id="do_submit">
+                                            <!-- if $id --><input type="hidden" name="id" value="{$id}" /><!-- /if -->
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-right">发货仓库：</td>
+                                                    <td>
+                                                        <select class="form-control" id="stock_id" name="stock_id">
+                                                            <!-- loop from=$stock key=$key value=$value -->
+                                                            <option value="{$value.id}" {if $rs.stock_id==$value.id} selected="selected"{/if}>{$value.title}</option>
+                                                            <!-- /loop -->
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right col-md-2">联系人：</td>
+                                                    <td class="col-md-10"><input type="text" id="name" name="name" value="{$rs.name ? $rs.name : $rs.user}" class="form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">手机：</td>
+                                                    <td><input type="text" id="mobile" name="mobile" value="{$rs.mobile}" class="form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">取件地址：</td>
+                                                    <td><input type="text" id="address" name="address" value="{$rs.address}" class="form-control" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">期望上门时间：</td>
+                                                    <td>
+                                                        <input class="form-control" id="visitTime" name="visitTime" value="{$rs.visitTime ? date('Y-m-d H:i:s',$rs.visitTime) : ''}" type="text" placeholder="yyyy-MM-dd HH:mm:ss" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">物品重量：</td>
+                                                    <td><input type="text" id="weight" name="weight" value="{$rs.weight}" class="form-control"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right">备注：</td>
+                                                    <td>
+                                                        <textarea id="note" name="note" maxlength="100" class="form-control"rows="2">{$rs.note}</textarea>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <button class="btn blue" type="submit">
+                                                        <i class="fa fa-edit"></i>
+                                                        预约取件
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {/if}
+                                        {if $sys.func == 'delivery_list'}
+                                        <div class="table-scrollable">
+                                            <table class="table table-striped table-bordered table-advance table-hover">
+                                                <thead>
+                                                <tr>
+
+                                                    <th class="bold text-center">联系人</th>
+                                                    <th class="bold text-center">手机</th>
+                                                    <th class="bold text-center">取件地址</th>
+                                                    <th class="bold text-center">取件时间</th>
+                                                    <th class="bold text-center">物品重量(磅)</th>
+                                                    <th class="bold text-center">提交时间</th>
+                                                    <th class="bold text-center">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <!-- if $rslist -->
+                                                <!-- loop from=$rslist key=$key value=$value -->
+                                                <tr>
+                                                    <td class="text-center">{$value.name}</td>
+                                                    <td class="text-center">{$value.mobile}</td>
+                                                    <td class="text-center">{$value.address}</td>
+                                                    <td class="text-center">{func date 'Y-m-d H:i:s' $value.visitTime}</td>
+                                                    <td class="text-center">{$value.weight}</td>
+                                                    <td class="text-center">{func date 'Y-m-d H:i:s' $value.addtime}</td>
+                                                    <td class="text-center">
+                                                        {if $value.status==0}
+                                                        <input type="button" value="修改" onclick="delivery_edit({$value.id})" class="btn btn-xs btn-info" />
+                                                        <input type="button" value="删除" onclick="delivery_delete({$value.id})" class="btn btn-xs btn-danger" />
+                                                        {else}
+                                                        已取件
+                                                         {/if}
+                                                    </td>
+                                                </tr>
+                                                <!-- /loop -->
+                                                <!-- else -->
+                                                <tr><td colspan="7"><span class="fa fa-warning">没有记录!</span></td></tr>
+                                                <!-- /if -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="text-right" style="margin-right: 16px;"><!-- include tpl=block_pagelist --></div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{#js#}/laydate/laydate.js"></script>
+<script type="text/javascript">
+    //时间选择器
+	laydate.render({
+	  elem: '#visitTime'
+	  ,type: 'datetime'
+	});
+    var is_id = '{$id}';
+    $(document).ready(function(){
+        $("#do_submit").submit(function(){
+            var name = $("#name").val();
+            if(!name){
+                $.dialog.alert("联系人不能为空！");
+                return false;
+            }
+            var mobile = $("#mobile").val();
+            if(!mobile){
+                $.dialog.alert("手机不能为空！");
+                return false;
+            }
+            var address = $("#address").val();
+            if(!address){
+                $.dialog.alert("取件地址不能为空！");
+                return false;
+            }
+            $(this).ajaxSubmit({
+                type:'post',
+                url: api_url('delivery','delivery'),
+                dataType:'json',
+                success: function(rs){
+                    if(rs.status != 'ok'){
+                        if(!rs.content){
+                            rs.content = '提交失败';
+                        }
+                        $.dialog.alert(rs.content);
+                        return false;
+                    }
+                    //订单操作成功的提示
+                    if(is_id && is_id != '0'){
+                        $.dialog.alert('上门取件信息编辑成功',function(){
+                            $.dsy.go('{url ctrl=delivery func=delivery_list /}');
+                        },'succeed');
+                    }else{
+                        $.dialog.alert('上门取件信息预约成功',function(){
+                            $.dsy.go('{url ctrl=delivery func=delivery_list /}');
+                        },'succeed');
+                    }
+                }
+            });
+            return false;
+        });
+    });
+
+    var url;
+    function tab(arg){
+        var url = get_url('delivery',arg);
+        direct(url);
+    }
+    function delivery_edit(id){
+        direct("{url ctrl=delivery func=delivery /}&id="+id);
+    }
+    function delivery_delete(id){
+        $.dialog.confirm('确定要删除取件信息吗?<br />删除后您不能再恢复!',function(){
+            var url = get_url('delivery','delivery_delete','id='+id);
+            var rs = json_ajax(url);
+            if(rs.status == 'ok')
+            {
+                $.dsy.reload();
+            }
+            else
+            {
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+</script>
+<!-- include tpl=foot_member -->

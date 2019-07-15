@@ -1,0 +1,14 @@
+User-Agent: *
+Allow: /
+Disallow: /css/
+Disallow: /data/
+Disallow: /extension/
+Disallow: /framework/
+Disallow: /gateway/
+Disallow: /images/
+Disallow: /js/
+Disallow: /phpinc/
+Disallow: /plugin/
+Disallow: /res/
+Disallow: /task/
+Disallow: /tpl/

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="author" content="dsaiyin" />
+    <title><!-- if $title -->{$title} - <!-- /if -->{$config.title}<!-- if $seo.title --> - {$seo.title}<!-- /if --></title>
+    <meta name="keywords" content="{$seo.keywords}" />
+    <meta name="description" content="{$seo.description}" />
+    <base href="{$sys.url}" />
+    <script type="text/javascript" src="{url ctrl=js /}" charset="utf-8"></script>
+    <script type="text/javascript" src="js/global.js" charset="UTF-8"></script>
+    <link href="{#css#}/artdialog.css" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="top">
+    <div class="container clearfix">
+        <div class="pull-left top-l">
+            <div id="ddate" class="pull-left"></div><span id="ddate2"></span>
+            <script src="js/time.js"></script>
+        </div>
+        <div class="pull-right">
+            <div class="pull-left email">{$config.contact.email}</div>
+            <div class="pull-left phone">{$config.contact.tel}</div>
+        </div>
+    </div>
+</div>
+<div class="header">
+    <div class="container clearfix">
+        <div class="pull-left logo"><a href="{$sys.url}" title="{$config.title}"><img src="{$config.logo}" alt="{$config.title}"></a></div>
+        <!-- php:$list = dsy('menu') -->
+        <!-- loop from=$list.rslist key=$key value=$value id=mindex -->
+        <ul class="pull-left clearfix nav-list">
+            <li{if $highlight == $mindex.num || $menutitle == $value.title} class="active"{/if}>
+            <a href="{$value.url}">{$value.title}</a>
+            {if $value.sonlist}
+            <span class="nav-down-c"><i class="glyphicon glyphicon-plus"></i></span>
+            <ul class="nav-down">
+                <!-- loop from=$value.sonlist key=$k value=$v -->
+                <li><a href="{$v.url}">{$v.title}</a></li>
+                <!-- /loop -->
+            </ul>
+            {/if}
+            </li>
+        </ul>
+        <!-- /loop -->
+        <div class="pull-right header-right">
+            <!-- if $session.user_id -->
+            <a href="{url ctrl=usercp/}" class="user-icon">会员中心<span class="caret"></span></a>
+            <a href="javascript:$.user.logout('{$session.user_name}');void(0)" class="user-out">退出</a>
+            <!-- else -->
+            <a href="{url ctrl=register/}" class="register-link">注册</a>
+            <a href="{url ctrl=login/}" class="register-login">登录</a>
+            <!-- /if -->
+        </div>
+        <button type="button" class="navbar-toggle collapsed">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+</div>

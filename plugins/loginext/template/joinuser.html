@@ -1,0 +1,62 @@
+<!-- include tpl=head_open -->
+<script type="text/javascript">
+function save()
+{
+	var obj = $.dialog.opener;
+	var url = get_url('plugin','exec','id=loginext&exec=joinaction');
+	var main_account = $("#main_account").val();
+	if(!main_account){
+		$.dialog.alert('主账号不能为空');
+		return false;
+	}
+	var chk = check_account(main_account);
+	if(!chk){
+		return false;
+	}
+	var ext_account = $("#ext_account").val();
+	if(!ext_account){
+		$.dialog.alert('要合并的账号不能为空');
+		return false;
+	}
+	var chk = check_account(ext_account);
+	if(!chk){
+		return false;
+	}
+	url += "&m_account="+$.str.encode(main_account)+"&e_account="+$.str.encode(ext_account);
+	var rs = $.dsy.json(url);
+	if(rs.status){
+		$.dialog.alert('会员合并成功',function(){obj.$.dsy.reload()},'succeed');
+	}else{
+		$.dialog.alert(rs.info);
+	}
+	return false;
+}
+function check_account(name)
+{
+	var url = get_url('plugin','exec','id=loginext&exec=check_account');
+	url += "&user="+$.str.encode(name);
+	var rs = $.dsy.json(url);
+	if(rs.status){
+		return true;
+	}
+	$.dialog.alert(rs.info);
+	return false;
+}
+</script>
+<div class="table">
+	<div class="title">
+		主账号：<span class="note">请输入会员的主账号</span>
+	</div>
+	<div class="content">
+		<input type="text" id="main_account" value="{$m_account}" />
+	</div>
+</div>
+<div class="table">
+	<div class="title">
+		合并账号：<span class="note">输入要被合并的会员账号</span>
+	</div>
+	<div class="content">
+		<input type="text" id="ext_account" value="" />
+	</div>
+</div>
+<!-- include tpl=foot_open -->

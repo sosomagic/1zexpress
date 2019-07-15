@@ -1,0 +1,100 @@
+<!-- php:$title= $cate_rs ? $cate_rs.title.' - '.$page_rs.title : $page_rs.title -->
+<!-- include tpl=head title=$title menutitle=$cate_rs.title -->
+<div class="banner-product news-banner">
+    <div class="container">
+        <div class="banner-tt">资讯中心</div>
+        <div class="banner-englist">Information Center</div>
+    </div>
+</div>
+<!--运算器-->
+<!-- if $cate_rs.id ==590 -->
+<div class="container calculator">
+    <div class="clearfix calculator-c">
+        <div class="first-con">
+            <div class="pull-left calculator-l1">运费计算器:</div>
+            <div class="pull-left ">
+				<select id="channel" class="form-control select-way1" name="channel" >
+					<option value="">---请选择发货渠道---</option>
+					<!-- loop from=$channel key=$key value=$value -->
+					<option value="{$value.id}">---{$value.title}---</option>
+					<!-- /loop -->
+				</select>
+            </div>
+        </div>
+        <div class="second-con">
+            <div class="pull-left title-select"> 会员级别：</div>
+            <div class="pull-left calculator-l2">
+                <select class="form-control select-way2" name="group_id" id="group_id">
+                    <!-- loop from=$group key=$key value=$value -->
+                    <option value="{$value.id}">
+                       {$value.title}
+                    </option>
+                    <!-- /loop -->
+                </select>
+            </div>
+        </div>
+        <div class="three-con">
+            <div class="pull-left calculator-l3 none-folat">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label class="label-l" for="weight">重量(LB): </label>
+                        <input type="text" class="form-control form-text text-lc" id="weight" name="weight" value="" >
+                    </div>
+                    <button type="button " class="btn btn-default gusuan-btn" id="count" >估算</button>
+                </form>
+            </div>
+        </div>
+        <div class="pull-right calculator-r1 "></div>
+    </div>
+</div>
+<!-- /if -->
+<div class="about-padding">
+    <div class="container">
+        <div class="nav-b clearfix"><a href="{$sys.url}" title="{$config.title}">首页</a><span>/</span><a href="{$page_rs.url}" title="{$page_rs.title}">{$page_rs.title}</a>
+            <!-- if $cate_rs -->
+            <span>/</span><a href="{$cate_rs.url}" title="{$cate_rs.title}">{$cate_rs.title}</a>
+            <!-- /if -->
+        </div>
+        <div class="clearfix">
+            <div class="pull-left about-left">
+                <!-- include tpl=block_catelist -->
+            </div>
+            <div class="pull-right about-right">
+                <div class="news-tt-left news-tt-left02">{$cate_rs.title}</div>
+                <ul class="news-list-c">
+                    <!-- loop from=$rslist key=$key value=$value -->
+                    <li><a href="{$value.url}"><span clas="news-txt-l">{$value.title}</span><span class="news-date-r">{func date Y-m-d $value.dateline}</span></a></li>
+                    <!-- /loop -->
+                </ul>
+                <!--分页 -->
+                <div class="showpage">
+                    <!-- php:$pagelist = dsy_page($pageurl,$total,$pageid,$psize,"prev=上一页&next=下一页&last=末页&home=首页&always=1") -->
+                    <!-- loop from=$pagelist key=$key value=$value -->
+                    <a{if $value.status} class="now"{/if} href="{$value.url}">{$value.title}</a>
+                    <!-- /loop -->
+                </div>
+                <!--分页 -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- if $cate_rs.id ==590 -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#count").click(function(){
+            var channel=$("#channel").val();
+            var weight=$("#weight").val();
+            var group_id = $("#group_id").val();
+            var url = get_url('index','count','channel='+channel+'&weight='+weight+'&group_id='+group_id);
+            $.dialog.open(url,{
+                'title':'计算运费',
+                'width':'50%',
+                'height':'50%',
+                'lock':true
+            });
+            return false;
+        });
+    });
+</script>
+<!-- /if -->
+<!-- include tpl=foot -->

@@ -1,0 +1,61 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <form method="post" action="{url ctrl=open func=sender /}">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td>发件人姓名:</td>
+                            <td><input type="text" name="fullname" value="{$fullname}"></td>
+                            <td>电话:</td>
+                            <td><input type="text" name="tel" value="{$tel}"></td>
+                            <td><input type="submit" value="查 询" class="btn btn-sm btn-info" /></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <thead>
+                    <tr>
+                        <th class="bold">ID</th>
+                        <th class="bold">姓名</th>
+                        <th class="bold">电话</th>
+                        <th class="bold">地址</th>
+                        <th class="bold">邮编</th>
+                        <th class="bold text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- loop from=$rslist key=$key value=$value -->
+                    <tr>
+                        <td>{$value.id}</td>
+                        <td>{$value.fullname}</td>
+                        <td>{$value.tel}</td>
+                        <td>{$value.address}</td>
+                        <td>{$value.zipcode}</td>
+                        <td><input type="button" value="选择" class="dsy-btn btn btn-xs btn-danger" /></td>
+                    </tr>
+                    <!-- /loop -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var id = "{$id}";
+    //var id=GetQueryString("id");
+    var obj = $.dialog.opener;
+    $(document).ready(function(){
+        $('.dsy-btn').click(function(){
+            var val = $(this).parents('tr').children('td');
+            obj.$('#consignor_'+id).val(val.eq(1).text());
+            obj.$('#consignor_tel_'+id).val(val.eq(2).text());
+            obj.$('#consignor_address_'+id).val(val.eq(3).text());
+            $.dialog.close();
+        });
+    })
+</script>
+<!-- inc:foot_open -->

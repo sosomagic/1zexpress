@@ -1,0 +1,177 @@
+<!-- inc:head -->
+<!-- inc:nav -->
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <!-- inc:left -->
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+            <!-- BEGIN PAGE HEADER-->
+            <!-- BEGIN PAGE BAR -->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="{url ctrl=wealth/}" title="返回财富方案列表">财富方案</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <span>{$rs.title}收支规则</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet box grey">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-bars"></i>收支规则</div>
+                            <div class="tools">
+                                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-advance table-hover">
+                                <tbody>
+                                <tr><td>执行动作允许重复，所以请在设置规则时注意，是否需要多个动作</td></tr>
+                                <tr> <td>>重复支持/时间：这里时间是指在多少秒内，重复同样的动作是无效的，默认是30秒</td></tr>
+                                <tr><td>值：此框支持填写负数，正数，负数表示扣除，当{$rs.title}为0时，不能再执行扣除操作</td></tr>
+                                <tr><td>值支持变量price和hits两个！仅在特定场合使用，支持数学计算，如-(price/10+10)</td></tr>
+                                <tr><td>对象：所有财富在未指定规则时，都计算到用户，除非您指定了介绍人（也就是推荐人）</td></tr>
+                                <tr><td>规则不支持修改，但可以删除后创建新的规则</td></tr>
+                                <tr><td>主键ID仅限阅读，评论，订单，发布及分享（注册及登录这两项无效）</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form method="post" id="add_rule">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="portlet box grey">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-bars"></i>收支规则设置</div>
+                                <div class="tools">
+                                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <table class="table table-striped table-bordered table-advance table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="bold">ID</th>
+                                        <th class="bold">执行动作</th>
+                                        <th class="bold">重复支持/时间</th>
+                                        <th class="bold">值</th>
+                                        <th class="bold">对象</th>
+                                        <th class="bold">主键ID</th>
+                                        <th class="bold">排序</th>
+                                        <th class="bold text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- loop from=$rslist key=$key value=$value -->
+                                    <tr>
+                                        <td>{$value.id}</td>
+                                        <td>{$alist[$value[action]]}</td>
+                                        <td>{$repeatlist[$value[repeat]]}
+                                            <!-- if $value.repeat -->/ {$value.mintime}秒<!-- /if --></td>
+                                        <td>{$value.val}</td>
+                                        <td>{$value.goal !='user' ? '介绍人' : '用户'}</td>
+                                        <td>{$value.linkid ? '关联' : '不关联'}</td>
+                                        <td>{$value.taxis}</td>
+                                        <td class="text-center">
+                                            <input type="button" value="删除" onclick="delete_it('{$value.id}')" class="btn btn-danger" />
+                                        </td>
+                                    </tr>
+                                    <!-- /loop -->
+                                    <tr>
+                                        <td>添加</td>
+                                        <td>
+                                            <select name="action">
+                                                <option value="">{lang动作…}</option>
+                                                <!-- loop from=$alist key=$key value=$value id=$tmpid -->
+                                                <option value="{$key}">{$value}</option>
+                                                <!-- /loop -->
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="repeat">
+                                                <!-- loop from=$repeatlist key=$k value=$v id=$tmpid -->
+                                                <option value="{$k}">{$v}</option>
+                                                <!-- /loop -->
+                                            </select><input type="text" name="mintime" value="30" class="input-xsmall" style="margin-left:5px;" />
+                                        </td>
+                                        <td><input type="text" name="val" class="input-xsmall" /></td>
+                                        <td>
+                                            <select name="goal">
+                                                <option value="user">用户</option>
+                                                <option value="introducer">介绍人</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="linkid">
+                                                <option value="0">不关联</option>
+                                                <option value="1">关联</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="taxis" value="255" class="input-xsmall" /></td>
+                                        <td class="text-center">
+                                            <input type="submit" value="添加" class="btn btn-info" />
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<script type="text/javascript">
+    function delete_it(id)
+    {
+        $.dialog.confirm('{lang确定要删除当前规则吗？}',function(){
+            var url = get_url('wealth','delete_rule','id='+id);
+            var rs = $.dsy.json(url);
+            if(rs.status == 'ok'){
+                $.dialog.alert('{lang删除成功}',function(){
+                    $.dsy.reload();
+                },'succeed');
+            }else{
+                $.dialog.alert(rs.content);
+                return false;
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("#add_rule").submit(function(){
+            $(this).ajaxSubmit({
+                'url':"{url ctrl=wealth func=save_rule wid=$rs.id/}",
+                'type':'post',
+                'dataType':'json',
+                'success':function(rs){
+                    if(rs.status == 'ok'){
+                        $.dialog.alert('{lang规则创建成功}',function(){
+                            $.dsy.reload();
+                        },'succeed');
+                    }else{
+                        $.dialog.alert(rs.content);
+                        return false;
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!-- inc:foot -->

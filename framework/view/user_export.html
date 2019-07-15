@@ -1,0 +1,72 @@
+<!-- include tpl=head_open -->
+<form role="form" method="post" action="{echo admin_url('user','export_data')}">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box grey">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="md-checkbox-inline">
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" name="ext[]" id="ext_user" value="user" checked />
+                                        <label for="ext_user">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 用户名 </label>
+                                    </div>
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" name="ext[]" id="ext_mobile" value="mobile" checked />
+                                        <label for="ext_mobile">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 手机 </label>
+                                    </div>
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" name="ext[]" id="ext_group_id" value="group_id" checked />
+                                        <label for="ext_group_id">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 用户等级 </label>
+                                    </div>
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" name="ext[]" id="ext_val" value="val" checked />
+                                        <label for="ext_val">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box" style="width: 17px;height: 17px;border:1px solid #666"></span> 余额 </label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <select name="group_id" class="form-control input-small">
+                                    <option value="">请选择用户等级</option>
+                                    <!-- loop from=$grouplist key=$key value=$value -->
+                                    <option value="{$value.id}"{if $group_id==$value.id} selected{/if}>{$value.title}</option>
+                                    <!-- /loop -->
+                                </select>
+                            </td>
+                            <td><input class="form-control input-small" type="text" name="user" value="{$user}" placeholder="用户名" /></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-12 text-center" style="margin-top: 30px;">
+                        <button class="btn blue" type="submit">
+                            <i class="fa fa-edit"></i>
+                            导出Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- include tpl=foot_open -->

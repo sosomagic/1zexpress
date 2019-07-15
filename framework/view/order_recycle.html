@@ -1,0 +1,190 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=order/}">运单管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>运单回收站</span>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="navbar-collapse bg-white">
+            <form class="navbar-form navbar-left" method="post" action="{func admin_url order recycle}">
+                <div class="row">
+                    <div class="form-group">
+                        <select id="stock_id" name="stock_id" class="form-control">
+                            <option value="">仓库</option>
+                            <!-- loop from=$stocks key=$key value=$value -->
+                            <option value="{$value.id}"{if $value.id == $stock_id} selected{/if}>{$value.title}</option>
+                            <!-- /loop -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="channel_id" name="channel_id" class="form-control">
+                            <option value="">发货渠道</option>
+                            <!-- loop from=$channel_list key=$key value=$value -->
+                            <option value="{$value.id}"{if $value.id == $channel_id} selected{/if}>{$value.title}</option>
+                            <!-- /loop -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="batch" value="{$batch}" placeholder="清关批次" />
+                    </div>
+                    <div class="form-group">
+                        <input id="dateRange" class="form-control" type="text" name="dateRange" value="{$dateRange}" placeholder="下单日期范围"/>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="sn" value="{$sn}" placeholder="运单号" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="consignor" value="{$consignor}" placeholder="发件人" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="ucode" value="{$ucode}" placeholder="入库标识码" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="user" value="{$user}" placeholder="会员名" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="consignee" value="{$consignee}" placeholder="收件人" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control input-small" type="text" name="consignee_mobile" value="{$consignee_mobile}" placeholder="收件人手机" />
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-info" type="submit"><i class="fa fa-search"></i> 查 询 </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <div class="tabbable tabbable-tabdrop">
+                    <div class="tab-content">
+                        <table class="table table-striped table-bordered table-advance table-hover">
+                            <thead>
+                            <tr>
+                                <th class="bold">&nbsp;</th>
+                                <th class="bold text-center">运单号</th>
+                                <th class="bold text-center">会员</th>
+                                <th class="bold text-center">渠道</th>
+                                <th class="bold text-center">清关批次</th>
+                                <th class="bold text-center">仓库/仓位</th>
+                                <th class="bold text-center">收件人</th>
+                                <th class="bold text-center">状态</th>
+                                <th class="bold text-center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- loop from=$rslist key=$key value=$value -->
+                            <tr onclick="TestBlack('trshow{$key+1}');">
+                                <td class="text-center">
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input class="checkboxes" id="id_{$value.id}" name="ids[]" value="{$value.id}" type="checkbox">
+                                        <span></span>
+                                    </label>
+
+                                </td>
+                                <td class="text-center"><a href="{url ctrl=order func=info id=$value.id /}">{$value.sn}</a></td>
+                                <td class="text-center">{$value.user}<br><span class="font-blue-oleo">{$value.ucode}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$value.user_id}</span></td>
+                                <td class="text-center">{$channel[$key]['title']}</td>
+                                <td class="text-center font-blue">{$value.batch.title}</td>
+                                <td class="text-center">{$value.stock.title}<br><span class="font-blue-oleo">{$value.position}</span></td>
+                                <td class="text-center">{$address[$key]['fullname']}<br><span class="font-blue-oleo">{$address[$key]['mobile']}</span></td>
+                                <td class="text-center">{$value.track.note ? $value.track.note : $value.ext}</td>
+                                <td class="text-center">
+                                    <input type="button" value="还原" onclick="order_renew('{$value.id}','{$value.sn}')" class="btn btn-xs btn-info" />
+                                    <!-- if $popedom.delete -->
+                                    <input type="button" value="删除" onclick="order_delete('{$value.id}','{$value.sn}')" class="btn btn-xs btn-danger" />
+                                    <!-- /if -->
+                                </td>
+                            </tr>
+                            <tr id="trshow{$key+1}" style="display:{$key+1 > 1 ? none: ''}">
+                                <td colspan="9" align="left">
+                                    <div class="modal_border">
+                                        预估重量：{$value.weight}{$value['weight_units'][$value.weight_id]}{if !$value.jingzhong || $value.jingzhong!='0.00'} | 称重重量：{$value.jingzhong}{$value['weight_units'][$value.weight_id]}{/if}{if !$value.pay_weight || $value.pay_weight!='0.00'} | 计费重量：{$value.pay_weight}{$value['weight_units'][$value.weight_id]}{/if} | 费用：{$value.price}{$value.currency.title}({func price_format $value.price $value.currency_id $config.currency_id}) | 价值：{$value.val}{$value.currency.title} | 税费：{$value.tax}{$value.currency.title} | 保价：{$value.safe}{$value.currency.title} | 保费：{$value.safe_price}{$value.currency.title}
+                                    </div>
+
+                                    <div class="modal_border">
+                                        仓库：{$value.stock.title}{if $value.position<>''}（{$value.position}）{/if} | 来源：{$from[$value.type]}{if $value.batch.title} | 清关批次：{/if}{$value.batch.title} {if $value.express_sn}| 快递单号：{$value.express_sn}（{$value.express}） {/if}| 下单时间：{func date "Y-m-d H:i:s" $value.addtime} | 身份证：{$address[$key]['idcard']} {if $address[$key]['idcard_front']<>''}<a href="javascript:address_idcard('{$address[$key]['idcard_front']}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-正面"></a>{/if}
+                                        {if $address[$key]['idcard_back']<>''}<a href="javascript:address_idcard('{$address[$key]['idcard_back']}');void(0);"><img src="tpl/www/images/ico.png" width="16" height="13" title="预览身份证-反面"></a>{/if}
+                                    </div>
+                                    <div class="modal_border">
+                                        <strong>货物：</strong>
+                                        <!-- if $value.pros -->
+                                        <!-- loop from=$value.pros key=$k value=$v -->
+                                        {$v.brand}{$v.title}X{$v.qty}；
+                                        <!-- /loop -->
+                                        <!-- /if -->
+                                    </div>
+                                    <!-- if $value.note -->
+                                    <div class="modal_border">
+                                        <strong>备注：</strong>
+                                        {$value.note}
+                                    </div>
+                                    <!-- /if -->
+                                </td>
+                            </tr>
+                            <!-- /loop -->
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-6 form-inline">
+                                <div class="form-group">
+                                    <input type="button" value="全选" class="btn btn-xs btn-danger" onclick="$.input.checkbox_all()" />
+                                    <input type="button" value="全不选" class="btn btn-xs btn-success" onclick="$.input.checkbox_none()" />
+                                    <input type="button" value="反选" class="btn btn-xs btn-warning" onclick="$.input.checkbox_anti()" />
+                                </div>
+                                <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="order_deletes()">
+                                    <i class="fa fa-close"></i>
+                                    批量删除
+                                </a>
+                            </div>
+                            <div class="col-md-6 text-right" style="font-size: 12px;"><!-- include tpl=pagelist --></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{func add_js order.js}"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    //日期范围
+    laydate.render({
+        elem: '#dateRange'
+        ,range: true
+    });
+    function TestBlack(TagName)
+    {
+        //先全部隐藏
+        for (var i=1;i<1000;i++)
+        {
+            if(document.getElementById('trshow'+i)!=undefined)
+            {
+                document.getElementById('trshow'+i).style.display = "none";//alert("存在");
+            }else{
+                break;
+            }
+        }
+        //处理
+        var obj = document.getElementById(TagName);
+        if(obj.style.display==""){
+            obj.style.display = "none";
+
+        }else{
+            obj.style.display = "";
+
+        }
+    }
+</script>
+<!-- inc:foot -->

@@ -1,0 +1,112 @@
+<?php if(!defined("DSAIYIN_SET")){exit("<h1>Access Denied</h1>");} ?><?php $this->output("head","file"); ?>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="<?php echo admin_url('order');?>" title="返回运单列表">运单管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>更新运单派送状态</span>
+        </li>
+    </ul>
+</div>
+<form method="post" id="saveorder">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right"><?php echo $extlist['title'];?>：</td>
+                            <td>
+                                <?php echo $extlist['html'];?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">更新时间：</td>
+                            <td>
+                                <input class="form-control" id="addtime" name="addtime" value="" type="text" placeholder="yyyy-MM-dd HH:mm:ss" />
+                                <span class="help-block">留空使用系统当前时间：<?php echo date('Y-m-d H:i',$sys['time']);?></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit">批量导入</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bars"></i>注意事项</div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <tbody>
+                    <tr><td>1、请使用Excel创建一个.xls文件，格式如下<span class="font-red">（<a href="tpl/www/images/expressdata.xls" class="red" style="text-decoration: underline">点击下载模板</a>）</span>。</td></tr>
+                    <tr><td>2、填写国内派送信息（包括快递名称和快递单号）后上传系统，以便更新运单的派送状态。</td></tr>
+                    <tr><td>3、国内快递公司请与你后台“<a href="<?php echo dsy_url(array('ctrl'=>'express'));?>" target="_blank">快递设置</a> ”里填写的快递名一致。</td></tr>
+                    <tr><td>4、请勿随意修改字段文字标题，修改文字标题导致文件导入失败。</td></tr>
+                    <tr><td>5、Excel表格一次不能大于2M，超过2M的请分批导入。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    //时间选择器
+	laydate.render({
+	  elem: '#addtime'
+	  ,type: 'datetime'
+	});
+    $(document).ready(function(){
+        var loading_action;
+        $("#saveorder").submit(function(){
+            var dfile = $("#dfile").val();
+            if(!dfile){
+                $.dialog.alert("请上传Excel文件！");
+                return false;
+            }
+            var obj = $.dialog.opener;
+            //通过Ajax提交订单，客户端检查订单信息是否完整
+            $(this).ajaxSubmit({
+                'url':get_url('order','modify_data'),
+                'type':'post',
+                'dataType':'json',
+                'beforeSubmit':function(){
+                    loading_action = $.dialog.tips('<img src="images/loading.gif" border="0" align="absmiddle" /> 正在保存数据，请稍候…').time(30).lock();
+                },
+                'success':function(rs){
+                    if(loading_action){
+                        loading_action.close();
+                    }
+                    if(rs.status != 'ok'){
+                        if(!rs.content) rs.content = '批量更新运单失败';
+                        alert(rs.content);
+                        return false;
+                    }
+                    else
+                    {
+                        $.dialog.alert("运单批量更新成功",function(){
+                            obj.$.dsy.reload();
+                        },'succeed');
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<?php $this->output("foot","file"); ?>

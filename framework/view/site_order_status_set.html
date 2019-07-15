@@ -1,0 +1,93 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <form method="post" id="postsave" onsubmit="return false">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-4">运单状态：</td>
+                            <td class="col-md-8">
+                                <input id="title" name="title" value="{$rs.title}" type="text" style="width:70%" />
+                                <span class="help-block">请填写标识为：{$rs.identifier}对应的常用称呼</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">通知会员：</td>
+                            <td>
+                                <select name="email_tpl_user" style="width:265px">
+                                    <option value="">邮件模板：不通知会员</option>
+                                    <!-- loop from=$emailtpl key=$key value=$value -->
+                                    <!-- if substr($value.identifier,0,4) != 'sms_' -->
+                                    <option value="{$value.identifier}"{if $rs.email_tpl_user == $value.identifier} selected{/if}>邮件模板：{$value.title}</option>
+                                    <!-- /if -->
+                                    <!-- /loop -->
+                                </select>
+                                <div class="clearfix"></div>
+                                <select name="sms_tpl_user" style="width:265px">
+                                    <option value="">短信模板：不通知会员</option>
+                                    <!-- loop from=$emailtpl key=$key value=$value -->
+                                    <!-- if substr($value.identifier,0,4) == 'sms_' -->
+                                    <option value="{$value.identifier}"{if $rs.sms_tpl_user == $value.identifier} selected{/if}>短信模板：{$value.title}</option>
+                                    <!-- /if -->
+                                    <!-- /loop -->
+                                </select>
+                                <span class="help-block">选择模板，订单状态更新后，会以邮件或短信通知客户</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">启用：</td>
+                            <td><div class="md-radio-inline">
+                                <div class="md-radio">
+                                    <input id="status1" type="radio" name="status" value="1"{if $rs.status} checked{/if} class="md-radiobtn">
+                                    <label for="status1">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> 启用 </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input id="status2" type="radio" name="status" value="0"{if !$rs.status} checked{/if} class="md-radiobtn">
+                                    <label for="status2">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> 禁用 </label>
+                                </div>
+                            </div>
+                                <span class="help-block">设置是否使用，不使用将跳过进入下一项，如不存在则为结束</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">序号：</td>
+                            <td><input type="text" name="taxis" id="taxis" value="{$rs.taxis}" class="input-xsmall"/>
+                                <span class="help-block">请保持唯一，以确保客户能正常显示订单进度</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function save()
+    {
+        var obj = $.dialog.opener;
+        $("#postsave").ajaxSubmit({
+            'url':get_url("site",'order_status_save','id={$id}'),
+            'type':'post',
+            'dataType':'json',
+            'success':function(rs){
+                if(rs.status == 'ok'){
+                    $.dialog.alert('编辑成功',function(){
+                        obj.$.dsy.reload();
+                    },'succeed');
+                }else{
+                    $.dialog.alert(rs.content);
+                }
+            }
+        });
+        return false;
+    }
+</script>
+<!-- include tpl=foot_open -->

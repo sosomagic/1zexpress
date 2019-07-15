@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<title>快捷登录</title>
+	<desc>实现QQ，微信，微博等快捷登录，支持绑定会员</desc>
+	<author>dsaiyin.com</author>
+	<version>1.0</version>
+</root>

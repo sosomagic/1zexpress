@@ -1,0 +1,102 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <form method="post" id="modify">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right">字段名称：</td>
+                            <td><input type="text" id="title" name="title" value="{$rs.title}" style="width:100%;" />
+                                <span class="help-block">设置一个名称，该名称在表单的头部信息显示</span>
+                                <div id="title_note"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">字段备注：</td>
+                            <td><input type="text" id="note" name="note" value="{$rs.note}" style="width:100%;" />
+                                <span class="help-block">仅限后台管理使用，用于查看这个字段主要做什么</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">表单类型：</td>
+                            <td><select id="form_type" name="form_type" onchange="_dsy_form_opt(this.value,'form_type_ext','{$id}')">
+                                <option value="">请选择表单</option>
+                                <!-- foreach($form_list AS $key=>$value) -->
+                                <option value="{$key}"{if $key == $rs.form_type} selected{/if}>{$value}</option>
+                                <!-- /foreach -->
+                            </select>
+                                <span class="help-block">请选择字段要使用的表单添加完后，将不允许再修改</td>
+                        </tr>
+                        <div class="clearfix"></div>
+                        <div id="form_type_ext" style="display:none"></div>
+                        <div class="clearfix"></div>
+                        <tr>
+                            <td class="text-right">表单样式（CSS）：</td>
+                            <td><input type="text" id="form_style" name="form_style" value="{$rs.form_style}" style="width:100%;" />
+                                <span class="help-block">不能超过250个字符</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">表单默认值：</td>
+                            <td><input type="text" id="content" name="content" value="{$rs.content}" style="width:100%;" />
+                                <span class="help-block">设置表单默认值，如果表单中有多个值，请用英文逗号隔开</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">接收数据格式化：</td>
+                            <td><select name="format" id="format">
+                                <!-- loop from=$format_list key=$key value=$value -->
+                                <option value="{$key}"{if $rs.format == $key} selected{/if}>{$value}</option>
+                                <!-- /loop -->
+                            </select>
+                                <span class="help-block">设置文本常见格式，如HTML，整型，浮点型等</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">排序：</td>
+                            <td><input type="text" id="taxis" name="taxis" value="{$rs.taxis ? $rs.taxis : 255}"  style="width:100%;" />
+                                <span class="help-block">值越小越往前靠，最小值为0，最大值为255</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--<div class="row">
+                        <div class="col-md-12 text-center">
+                            <button class="btn blue" type="submit">
+                                <i class="fa fa-edit"></i>
+                                提 交
+                            </button>
+                        </div>
+                    </div>-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function save()
+    {
+        var obj = art.dialog.opener;
+        $("#modify").ajaxSubmit({
+            'url':get_url('ext','save','id={$module}{if $tid}&tid={$tid}{/if}{if $tmpid}&tmpid={$tmpid}{/if}'),
+            'type':'post',
+            'dataType':'json',
+            'success':function(rs){
+                if(rs.status == 'ok')
+                {
+                    $.dialog.alert('字段编辑成功',function(){
+                        obj.$.dialog.close();
+                        obj.$.dsy.reload();
+                    },'succeed');
+                }
+                else
+                {
+                    $.dialog.alert(rs.content);
+                    return false;
+                }
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        _dsy_form_opt("{$rs.form_type}","form_type_ext","{$rs.id}");
+    });
+</script>
+<!-- include tpl=foot_open -->

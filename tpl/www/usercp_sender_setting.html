@@ -1,0 +1,68 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <form method="post" id="setsubmit" onsubmit="return false;">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right"><span class="font-red" style="margin-right: 6px;">*</span>发件人：</td>
+                            <td><input type="text" id="fullname" name="fullname" value="{$rs.fullname}" placeholder="请填写发件人姓名" style="ime-mode: disabled;width: 100%"/>
+                                <span class="help-block">清关要求，发件人只能填写英文</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span class="font-red" style="margin-right: 6px;">*</span>电话：</td>
+                            <td><input type="text" id="tel" name="tel" value="{$rs.tel}" placeholder="请填写发件人电话" style="ime-mode: disabled;width: 100%"/>
+                                <span class="help-block">请填写国外电话</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span class="font-red" style="margin-right: 6px;">*</span>地址：</td>
+                            <td><input type="text" id="address" name="address" value="{$rs.address}" placeholder="请填写发件人地址" style="ime-mode: disabled;width: 100%"/>
+                                <span class="help-block">清关要求，发件人地址只能填写英文</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span class="font-red" style="margin-right: 6px;">*</span>邮编：</td>
+                            <td><input type="text" id="zipcode" name="zipcode" value="{$rs.zipcode}" placeholder="请填写发件人邮编" style="ime-mode: disabled;width: 100%"/>
+                                <span class="help-block">请填写国外邮编</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function save()
+    {
+        var id = '{$id}';
+        var url = api_url('usercp','sender_setting');
+        if(id){
+            url += "&id="+id;
+        }
+        $("#setsubmit").ajaxSubmit({
+            'url':url,
+            'type':'post',
+            'dataType':'json',
+            'success':function(rs){
+                if(rs.status == 'ok'){
+                    var tip = id ? '发件人信息修改成功' : '发件人信息添加成功';
+                    $.dialog.alert(tip,function(){
+                        top.$.dsy.reload();
+                        //$.dsy.go('{url ctrl=open func=address /}&id=0');
+                    },'succeed');
+                }else{
+                    $.dialog.alert(rs.content);
+                    return false;
+                }
+            }
+        });
+        return false;
+    }
+</script>
+<!-- include tpl=foot_open -->

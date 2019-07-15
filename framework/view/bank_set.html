@@ -1,0 +1,60 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{echo admin_url('payment','bank_list')}" title="返回转账列表">转账管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>会员入账</span>
+        </li>
+    </ul>
+</div>
+<form method="post" action="{func admin_url payment setok}">
+    <input type="hidden" name="id" id="id" value="{$id}" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-2">充值金额：</td>
+                            <td><input type="text" id="money" name="money" class="input-small" value="{$rs.money}"/> 元
+                                <input type="hidden" name="user_id" value="{$rs.user_id}">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right">状态：</td>
+                            <td><div class="md-radio-inline">
+                                <div class="md-radio">
+                                    <input type="radio" id="status_1" name="status" value="1"{if $rs.status} checked{end} class="md-radiobtn">
+                                    <label for="status_1">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> 已处理 </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="status_0" name="status" value="0"{if !$rs.status} checked{end} class="md-radiobtn">
+                                    <label for="status_0">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> 未处理 </label>
+                                </div>
+
+                            </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit"> 提 交 </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- END CONTAINER -->
+<!-- inc:foot -->

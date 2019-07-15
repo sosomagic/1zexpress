@@ -1,0 +1,504 @@
+<!-- inc:head -->
+<!-- inc:nav -->
+<div class="page-container">
+<!-- inc:left -->
+<div class="page-content-wrapper">
+<div class="page-content">
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{func admin_url package}" title="返回包裹列表">包裹管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>创建包裹运单</span>
+        </li>
+    </ul>
+    <div class="text-right" style="margin-top:6px;"><a href="{url ctrl=package /}" class="btn btn-circle green-haze btn-outline sbold uppercase btn-sm">返回包裹列表</a></div>
+</div>
+<form method="post" id="saveorder">
+    <input type="hidden" id="ids" name="ids" value="" />
+    <input id="order_weight" name="order_weight" type="hidden" value="0">
+    <input id="order_jingzhong" name="order_jingzhong" type="hidden" value="0">
+    <input type="hidden" id="percent" value="">
+    <input type="hidden" id="tax" value="">
+	<input type="hidden" id="selectchannel" value="">
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bars"></i>创建包裹运单</div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <td class="text-right" style="width:102px;">渠道：</td>
+                        <td>
+                            <select class="form-control" id="channel" name="channel">
+                                <option value="">请选择发货渠道</option>
+                                <!-- loop from=$channel key=$key value=$value -->
+                                <option value="{$value.id}|{$value.rule}|{$value.num}|{$value.start_heavy}|{$value.start_price}|{$value.first}|{$value.first_price}|{$value.second_heavy}|{$value.second}|{$value.second_price}|{$value.currency_id}|{$value.from_sn}|{$value.percent}|{$value.weight_id}|{$value.tax}|{$value.tracking_number}|{$value.third_heavy}|{$value.third}|{$value.third_price}|{$value.remove}"{if $rs.channel==$value.id} selected="selected"{/if}>{$value.title}</option>
+                                <!-- /loop -->
+                            </select>							
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">会员：</td>
+                        <td>
+                            {func form_edit user_id $rs.user_id user}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">仓库：</td>
+                        <td>
+                            <select class="form-control" id="stock" name="stock">
+                                <option value="">请选择发货仓库</option>
+                                <!-- loop from=$stock key=$key value=$value -->
+                                <option value="{$value.id}"{if $rs.stock_id==$value.id} selected{/if}>{$value.title}</option>
+                                <!-- /loop -->
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bars"></i>包裹信息</div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="package"></div>
+                <div class="navbar navbar-default" role="navigation" style="padding:10px 15px;">
+                    <div class="row">
+                        <div class="md-radio-inline col-md-6">
+                            <div class="md-radio">
+                                <input type="radio" id="ptype_1" name="ptype" value="1" onclick="setydtype('1')" class="md-radiobtn">
+                                <label for="ptype_1">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> 原箱转运 </label>
+                            </div>
+                            <div class="md-radio">
+                                <input type="radio" id="ptype_2" name="ptype" value="2" onclick="setydtype('2')" class="md-radiobtn">
+                                <label for="ptype_2">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> 合箱转运 </label>
+                            </div>
+                            <div class="md-radio">
+                                <input type="radio" id="ptype_3" name="ptype" value="3" onclick="setydtype('3')" class="md-radiobtn">
+                                <label for="ptype_3">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> 分箱转运 </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-right" style="margin-top: 5px; display:none" id="cy1">创建订单数量：</div>
+                        <div class="col-md-4" id="cy2" style="display:none">
+                            <select name="bs_boxnum" id="bs_boxnum"  style="margin-top: 4px;">
+                                <option  selected="selected" value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>&nbsp;&nbsp;一个运单对应一个箱子
+                        </div>
+                    </div>
+                </div>
+                <div id="uyi"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- if $custom_list -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bars"></i>服务要求</div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                    <!-- loop from=$custom_list key=$key value=$value -->
+                    <tr>
+                        <td class="text-right" style="width:102px;">{$value.title}：</td>
+                        <td>
+                            <div class="md-radio-inline">
+                                <!-- loop from=$value.custom key=$k value=$v -->
+                                <div class="md-radio">
+                                    <input type="radio" name="custom_{$v.cate_id}" id="custom_{$v.id}" value="{$v.id}" class="md-radiobtn fuwu">
+                                    <label for="custom_{$v.id}">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> {$v.title}<!-- if $v.price <>'0.00' --><i class="font-grey-gallery "> {$v.price} <span class="currency"></span> </i> <!-- /if --></label>
+                                </div>
+                                <!-- /loop -->
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- /loop -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /if -->
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button class="btn blue" type="submit" id="submit">
+            <i class="fa fa-edit"></i>
+            提 交
+        </button>
+    </div>
+</div>
+</form>
+</div>
+<!-- END CONTENT BODY -->
+</div>
+<!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<script type="text/javascript">
+var htmlty='';
+$(document).ready(function(){
+    $("#saveorder").submit(function(){
+        $(this).ajaxSubmit({
+            'url':get_url('order','create'),
+            'type':'post',
+            'dataType':'json',
+            beforeSend: function () {
+                // 禁用按钮防止重复提交
+                $("#submit").attr({ disabled: "disabled" });
+                //$("#loading").show();
+            },
+            'success':function(rs){
+                if(rs.status != 'ok'){
+                    if(!rs.content) rs.content = '包裹运单创建失败';
+                    alert(rs.content);
+                    return false;
+                }
+                else
+                {
+                    $.dialog.alert("包裹运单创建成功",function(){
+                        $.dsy.go('{url ctrl=order /}');
+                    },'succeed');
+                }
+            },
+            complete: function () {
+                $("#submit").removeAttr("disabled");
+            }
+        });
+        return false;
+    });
+    $("#channel").change(function(){
+        cost = $("#channel").val();
+        if(!cost){
+            $.dialog.alert("请选择发货渠道");
+        }else{
+            arr = cost.split("|");
+            $("#percent").val(arr[12]);
+            $("#tax").val(arr[14]);
+            url = get_url('package','currency','id='+arr[10]);
+            rs = json_ajax(url);
+            if(rs.status == 'ok')
+            {
+                $('.currency').text(rs.content.currency);
+				$('#selectchannel').val(rs.content.currency);
+            }
+        }
+    });
+	$("#stock").change(function(){
+		cost = $("#stock").val();
+		if(!cost){
+			$.dialog.alert("请选择仓库");
+		}
+	});
+    $("#bs_boxnum").change(function(){setydtype(4);});
+    var old = null; //用来保存原来的对象
+    $(".fuwu").each(function(){//循环绑定事件
+        if(this.checked){
+            old = this; //如果当前对象选中，保存该对象
+        }
+        this.onclick = function(){
+            if(this == old){//如果点击的对象原来是选中的，取消选中
+                this.checked = false;
+                old = null;
+            } else{
+                old = this;
+            }
+        }
+    });
+});
+function setbillshow(box_i){
+    var uid = $('#user_id').val();
+    var html=htmlty+'<table class="table table-striped table-bordered table-hover">';
+    html+='<tbody>';
+    html+='<tr>';
+    html+='<td class="text-right">申报价值：</td>';
+    html+='<td><input name="order_value_'+box_i+'"  value="" type="text" class="input-small" onKeyUp="keyup('+box_i+')"> <span class="currency">'+$('#selectchannel').val()+'</span>';
+    html+='</td>';
+    html+='<td class="text-right">税费：</td>';
+    html+='<td colspan="5"><input id="tax_'+box_i+'" name="tax_'+box_i+'"  value="" type="text" class="input-small"> <span class="currency">'+$('#selectchannel').val()+'</span>';
+    html+='</td>';
+    html+='</tr>';
+    html+='<tr>';
+    html+='<td class="text-right">物品保价：</td>';
+    html+='<td><input id="order_safe_'+box_i+'" name="order_safe_'+box_i+'" value="" type="text" class="input-small" onKeyUp="tykeyup('+box_i+')"> <span class="currency">'+$('#selectchannel').val()+'</span></td>';
+    html+='<td class="text-right">保价费用：</td>';
+    html+='<td><input id="order_safe_price_'+box_i+'"  name="order_safe_price_'+box_i+'" value="" type="text" class="input-small"> <span class="currency">'+$('#selectchannel').val()+'</span>';
+    html+='</td>';
+    html+='</tr>';
+    html+='<tr>';
+    html+='<td class="text-right">运单备注：</td>';
+    html+='<td colspan="5"><textarea name="note_'+box_i+'"  maxlength="100" style="width:100%;" rows="2"></textarea>';
+    html+='</td>';
+    html+='</tr>';
+    html+='<tr>';
+    html+='<td class="text-right">收件人信息：</td>';
+    html+='<td colspan="5">';
+    html+='<input type="hidden" name="aid_'+box_i+'"  id="aid_'+box_i+'" value="">';
+    html+='<input type="text" id="title_aid_'+box_i+'"  name="title_aid_'+box_i+'"  style="width:150px;" disabled="">&nbsp;<input onclick="address_settingt('+box_i+');" type="button" value="选择收件人" class="btn btn-xs btn-info" id="button_aid_'+box_i+'">&nbsp;<input type="button" value="新建收件人" class="btn btn-xs btn-danger" onclick="address('+uid+');">';
+    html+='</td>';
+    html+='</tr>';
+    html+='</tbody>';
+    html+='</table>	';
+    $("#uyi").append(html);
+}
+function setydtype(tempvalue) {
+    //强制选择渠道，方便计算关税
+    if(!$('#channel').val()){
+        $.dialog.alert("请选择渠道");
+        return false;
+    }
+    if($("#ids").val()!=""){
+        if(tempvalue!="4") $("#bs_boxnum").val("1");
+        if(tempvalue=="2" && $("#ids").val().split(",").length<2){alert("合箱至少需要选择二个包裹！");return false;}
+        if(tempvalue=="1"&& $("#ids").val().split(",").length>2){alert("原箱转运只能选择一个包裹！");return false;}
+        if(tempvalue=="3" || tempvalue=="4"){$("#cy1").show();$("#cy2").show();}else{$("#cy1").hide();$("#cy2").hide();}
+        var ids = $('#ids').val();
+        var url = get_url('package','pro_list','id='+ids);
+        var rs = json_ajax(url);
+        if(rs.status == 'ok')
+        {
+            $("#uyi").html("");
+            var data = rs.content;
+            for(var j=0;j<$("#bs_boxnum").val();j++){
+                htmlty='<div id="pro_show_'+j+'"><div class="table-scrollable">';
+                htmlty+='<table class="table table-striped table-bordered table-advance table-hover">';
+                htmlty+='<thead>';
+                htmlty+='<tr>';
+                htmlty+='<th>运单<span class="font-red bold">'+(j+1)+'</span></th>';
+                htmlty+='<th class="bold">类别</th>';
+                htmlty+='<th class="bold">品牌</th>';
+                htmlty+='<th class="bold">物品内容</th>';
+                htmlty+='<th class="bold">单位</th>';
+                htmlty+='<th class="bold">重量</th>';
+                htmlty+='<th class="bold">数量</th>';
+                htmlty+='<th class="bold">单价</th>';
+                htmlty+='<th>&nbsp;合计</th>';
+                htmlty+='<th class="bold">货币单位</th>';
+                htmlty+='</tr>';
+                htmlty+='</thead>';
+                htmlty+='<tbody>';
+                for(var i=0;i<data.length;i++){
+                    htmlty+='<tr><td><input onclick="address_setting('+j+');"  class="tty'+j+'" type="checkbox" value="'+data[i].id+'" name="pro_id_'+j+'[]"></td><td>'+data[i].catename+'</td><td>'+data[i].brand+'</td><td>'+data[i].title+'</td><td>'+data[i].unit+'</td><td>'+data[i].weight+'</td><td>'+data[i].qty+'</td><td>'+data[i].price+'</td><td>'+data[i].total_price+'</td><td>'+data[i].currency+'</td></tr>';
+                }
+                htmlty+='</tbody></table></div></div>';
+                setbillshow(j);
+            }
+        }else
+        {
+            $.dialog.alert(rs.content);
+            return false;
+        }
+    }
+    else{
+        alert("请先选择包裹！");
+        return false;
+    }
+}
+function address_setting(top){
+    var zl=0,dz=0;
+    $("[class = tty"+top+"]:checkbox").each(function () {
+        if ($(this).is(":checked")) {
+            dz+=parseFloat($(this).parent().parent("tr").find('td').eq(8).html().replace(/&nbsp;/ig, ""));
+        }
+    })
+    if($("[name = order_value_"+top+"]:input").val()!="" && $("[name = order_value_"+top+"]:input").val()!="0"){
+        var sz=parseFloat($("[name = order_value_"+top+"]:input").val());
+        if(sz>dz){
+            alert("申报价格不能超过商品总价！")
+            $("[name = order_value_"+top+"]:input").val('');
+        }
+    }
+}
+function keyup(top){
+    var dz=0;
+    $("[class = tty"+top+"]:checkbox").each(function () {
+        if ($(this).is(":checked")) {
+            dz+=parseFloat($(this).parent().parent("tr").find('td').eq(8).html().replace(/&nbsp;/ig, ""));
+        }
+    })
+    if($("[name = order_value_"+top+"]:input").val()!="" && $("[name = order_value_"+top+"]:input").val()!="0"){
+        var sz=parseFloat($("[name = order_value_"+top+"]:input").val());
+        if(sz>dz){
+            alert("申报价格不能超过商品总价！")
+            $("[name = order_value_"+top+"]:input").val('');
+        }
+    }
+    //计算税费
+    var tax = $('#tax').val();
+    var tax_price= sz*(tax/100);
+    $("#tax_"+top+"").val(tax_price);
+}
+function tykeyup(top){
+    var dx=/^[^\d.]+$/;
+    var safe = $("#order_safe_"+top+"").val();
+    if ($("[name = order_value_"+top+"]:input").val() < parseFloat(safe, 10))
+    {
+        alert('物品保价不能高于申报价值');
+        $("#order_safe_"+top+"").val('');
+    }
+
+    if(dx.test($("#order_safe_"+top+"").val())){
+        $("#order_safe_"+top+"").val(safe);
+    }else{
+        safe=$("#order_safe_"+top+"").val();
+    }
+    var percent = $('#percent').val();
+    var safe_price= safe*(percent/100);
+    $("#order_safe_price_"+top+"").val(safe_price);
+}
+function address_settingt(tempvalue){
+    var userid = $("#user_id").val();
+    var url = get_url("open","address") + "&id="+tempvalue+"&uid="+userid;
+    $.dialog.open(url,{
+        title: "收件人管理",
+        lock : true,
+        width: "700px",
+        height: "300px",
+        resize: false
+    });
+}
+function address(tempvalue){
+    var url = get_url('user','address_setting')+'&id='+tempvalue;
+    var title = '添加地址';
+    $.dialog.open(url,{
+        'title':title,
+        'lock':true,
+        'width':'600px',
+        'height':'310px',
+        'ok':function(){
+            var iframe = this.iframe.contentWindow;
+            if (!iframe.document.body) {
+                alert('iframe还没加载完毕呢');
+                return false;
+            };
+            iframe.save();
+            return false;
+        },'okVal':title,
+        'cancel':function(){
+            return true;
+        }
+    });
+}
+var cdu="";
+//var uid;
+var refreshid=setInterval("getUserId()","1000");
+function getUserId(){
+    if(cdu!=$("#user_id").val()  && $("#user_id").val()!=""){
+        if($('#user_id').length >0 && $("#user_id").val()!=""){
+            url = get_url('package','get_package','user_id='+$("#user_id").val());
+            var rs = json_ajax(url);
+            var html='';
+            html += '<div class="table-scrollable">';
+            html += '<table class="table table-striped table-bordered table-advance table-hover">';
+            html += '<thead>';
+            html += '<tr>';
+            html += '<th style="width: 20px;"></th>';
+            html += '<th class="bold col-md-2">包裹号</th>';
+            html += '<th class="bold col-md-6">商品信息</th>';
+            html += '<th class="bold col-md-2">预估重量</th>';
+            html += '<th class="bold col-md-2">入库重量</th>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+            if(rs.status == 'ok')
+            {
+                var data = rs.content;
+                for(var i=0;i<data.length;i++){
+                    var pro = data[i].pro;
+                    var unit = data[i].weight_units;
+                    html += '<tr>';
+                    html += '<td class="text-center">';
+                    html += '<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">';
+                    html += '<input class="baoguo" id="pid_'+data[i].id+'" value="'+data[i].id+'" name="pid[]" type="checkbox">';
+                    html += '<span></span>';
+                    html += '</label>';
+                    html += '</td>';
+                    html += '<td>'+data[i].sn+'</td>';
+                    html += '<td>';
+                    for(var j=0;j<pro.length;j++){
+                        html += pro[j].brand+'&nbsp;'+pro[j].title+'*'+pro[j].qty+';';
+                    }
+                    html += '</td>';
+                    html += '<td>'+data[i].wt+unit[data[i].weight_id]+'</td>';
+                    html += '<td>'+data[i].jingzhong+unit[data[i].weight_id]+'</td>';
+                    html += '</tr>';
+                }
+            }else{
+                html += '<tr><td colspan="5" class="text-center"><span class="fa fa-warning"> 没有包裹记录! </span></td></tr>';
+            }
+            html += '</tbody>';
+            html += '</table>';
+            html += '</div>';
+            $("#package").html(html);
+			$("[class = baoguo]:checkbox").on("click", function () {
+				var gz= 0,jz = 0,tyu=0;
+				var rty='';
+				$("[class = baoguo]:checkbox").each(function () {
+					if ($(this).is(":checked")) {
+						gz+=parseFloat($(this).parent().parent().parent("tr").find('td').eq(3).html().replace(/&nbsp;/ig, ""));
+						jz+=parseFloat($(this).parent().parent().parent("tr").find('td').eq(4).html().replace(/&nbsp;/ig, ""));
+						rty+=$(this).val()+',';
+						tyu+=1;
+					}
+				});
+				$("#order_weight").val(gz);
+				$("#order_jingzhong").val(jz);
+				$("#ids").val(rty.substring(0,rty.length-1));
+				if(tyu>1){$("#ptype_1").attr("disabled",true);$("#ptype_1").removeAttr("checked");}else{$("#ptype_1").removeAttr("disabled");}
+				if(tyu==1){$("#ptype_2").attr("disabled",true);$("#ptype_2").removeAttr("checked");}else{$("#ptype_2").removeAttr("disabled");}
+			});
+            cdu=$("#user_id").val();
+            //uid = $('#uid').val(cdu);
+        }
+    }
+}
+</script>
+<!-- inc:foot -->

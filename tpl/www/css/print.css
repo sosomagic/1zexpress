@@ -1,0 +1,62 @@
+/* CSS Document */
+@charset "utf-8";
+body {background:#fff; color:#000000; font-size:62.5%; font-family:"宋体"; font-size:12px; margin:0px; padding:0px;}
+#box{ width:400px; height:600px; margin:0 auto;}
+#box_con{ float:left; width:400px; height:auto; text-align:center;}
+
+.top{ float:left; width:400px; height:auto; border-bottom:2px solid #000000; padding:10px 0px 0px 0px;}
+.logo{ float:left; width:115px; height:48px; padding:0px 0px 0px 5px;}
+.top_rig{ float:right; width:192px; height:51px; margin:0px 30px 0px 0px;}
+
+.send{ float:left; width:400px; height:auto; border-bottom:2px solid #000000;}
+.send_z{ float:left; width:400px; height:24px; line-height:24px; margin-left:5px;}
+.send_n{ float:left; width:200px; height:24px;}
+.send_a{ float:left; width:80px; height:24px; font-size:12px; text-align:left;}
+.send_b{ float:left; width:120px; height:24px; font-size:12px;font-weight:bold;text-align: left;}
+.send_c{ float:left; width:300px; height:24px; font-size:12px;font-weight:bold;line-height: 13px;text-align: left;margin-right: 20px;}
+
+.msg{ float:left; width:400px; height:auto; border-bottom:2px solid #000000;}
+.msgL{ float:left; width:220px; height:auto; line-height:24px; text-align:left;}
+.msgL_n{ float:left; width:220px; height:auto;margin-left:5px;}
+.msgL_na{ float:left; width:220px; height:24px; font-size:12px;}
+.msgL_nb{ float:left; width:220px; height:65px; line-height:16px; font-size:12px;font-weight:bold;}
+.msgL_z{ float:left; width:300px; height:24px; line-height:24px;margin-left:5px;}
+.msgL_zn{ float:left; width:170px; height:24px;}
+.msgL_a{ float:left; width:90px; height:24px; font-size:12px; text-align:left;}
+.msgL_b{ float:left; width:80px; height:24px; font-size:12px;}
+.msgL_zn1{ float:left; width:120px; height:24px; margin-left:10px;}
+.msgL_aa{ float:left; width:90px; height:24px; font-size:12px; text-align:left;}
+.msgL_ab{ float:left; width:30px; height:24px; font-size:12px;}
+
+.msgR{ float:right; width:170px; height:auto;}
+.msgR_n{ float:left; width:170px; height:24px; font-size:12px; line-height:24px;}
+.msgR_a{ float:left; width:60px; height:24px;}
+.msgR_b{ float:left; width:100px; height:24px; text-align: left;}
+.msgR_b span{ font-size:12px; font-weight:bold;}
+.msgR_z{ float:left; width:170px; height:auto;}
+.msgR_zn{ float:left; width:170px; height:24px;}
+.msgR_zn span{ float:left; width:56px; height:24px; text-align:center; line-height:24px; font-size:12px;}
+
+.pick{ float:left; text-align:left; font-size:12px; width:400px; height:24px; line-height:24px; border-bottom:2px solid #000000;}
+.pick_lft{ float:left; width:195px;padding-left:5px;}
+.pick_rig{ float:left; width:200px;}
+
+.add{ float:left; width:400px; height:auto; border-bottom:2px solid #000000;}
+.add_a{ float:left; width:190px; height:55px; margin-top:5px;margin-left:5px;}
+.add_n{ float:left; width:400px; height:24px; line-height:24px;}
+.add_nz{ float:left; width:200px; height:24px;}
+.add_na{ float:left; width:80px; height:24px; font-size:12px; text-align:left; margin-left:5px;}
+.add_nb{ float:left; width:80px; height:24px; font-size:14px;}
+
+.tel{ float:left; width:400px; height:24px; line-height:24px;}
+.tel_lft{ float:left; width:180px; }
+.tel_a{ float:left; width:60px; height:24px; font-size:12px; text-align:left;margin-left:5px;}
+.tel_b{ float:left; width:100px; height:24px; font-size:12px; text-align:left; padding:0px 0px 0px 50px;}
+.tel_c{ float:left; width:100px; height:24px;margin-top:5px;}
+.tel_rig{ float:left; width:200px;margin-top:5px;margin-right: 10px;}
+
+.pic{ float:right; width:96px; height:13px; padding:20px 50px 20px 0px;}
+
+
+
+

@@ -1,0 +1,107 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <tbody>
+                    <!-- loop from=$rslist key=$key value=$value -->
+                    <tr>
+                        <td class="col-md-8">{$value.note}</td>
+                        <td class="col-md-2">{func date "Y-m-d H:i" $value.addtime}</td>
+                        <td class="col-md-2"><input type="button" value="删除记录" onclick="delete_it('{$value.id}','{$value.note}')" class="btn red" /></td>
+                    </tr>
+                    <!-- /loop -->
+                    </tbody>
+                </table>
+                <div class="clearfix"></div>
+                <form method="post" id="postsave">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right">运单状态：</td>
+                            <td>
+                                <!-- loop from=$delivery_list key=$key value=$value id=list_id -->
+                                <div class="md-radio">
+                                    <input type="radio" id="{$list_id.num}" name="note" class="md-radiobtn" value="{$value.title}|{$value.status}"{if $value.title==$rslist[0]['note']} checked{/if}>
+                                    <label for="{$list_id.num}">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> {$value.title} </label>
+                                </div>
+                                <!-- /loop -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">更新时间：</td>
+                            <td><input class="form-control" id="addtime" name="addtime" value="" type="text" placeholder="yyyy-MM-dd HH:mm:ss" />
+                                <span class="help-block">为空使用系统当前时间：{func date "Y-m-d H:i" $sys.time}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button class="btn blue" type="submit">
+                                <i class="fa fa-edit"></i>
+                                更新运单状态
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    //时间选择器
+	laydate.render({
+	  elem: '#addtime'
+	  ,type: 'datetime'
+	});
+    function add_save()
+    {
+        var obj = $.dialog.opener;
+        $("#postsave").ajaxSubmit({
+            'url':get_url('order','delivery_save','id={$rs.id}'),
+            'type':'post',
+            'dataType':'json',
+            'success':function(rs){
+                if(rs.status == 'ok'){
+                    var data = rs.content;
+                    var tip = '发货状态更新成功';
+                    $.dialog.alert(tip,function(){
+                        if(data=='received'){
+                            obj.$.dsy.reload();
+                        }else{
+                            $.dsy.reload();
+                        }
+
+                    },'succeed');
+                }else{
+                    $.dialog.alert(rs.content)
+                }
+            }
+        });
+    }
+    function delete_it(id,note)
+    {
+        $.dialog.confirm('确定要删除'+note+'？',function(){
+            var url = get_url('order','delivery_delete','id='+id);
+            $.dsy.json(url,function(rs){
+                if(rs.status == 'ok'){
+                    $.dsy.reload();
+                }else{
+                    $.dialog.alert(rs.content)
+                }
+            })
+        });
+    }
+    $(document).ready(function(){
+        $("#postsave").submit(function(){
+            add_save();
+            return false;
+        });
+    });
+</script>
+<!-- include tpl=foot_open -->

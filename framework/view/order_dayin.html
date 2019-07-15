@@ -1,0 +1,223 @@
+<!-- php:$title = '打印运单' --><!-- include tpl=head title=$title -->
+<script type="text/javascript" src="{func add_js order.js}"></script>
+<style type="text/css" media=print>
+.noprint{display : none }
+</style>
+<script language="javascript" type="text/javascript">
+        function UserPrint()
+        {
+          bdhtml=window.document.body.innerHtml;
+
+          var headstr = "<html><head></head><body>";
+          var footstr = "</body>";
+          var bodystr = document.all.item("div_print").innerHTML;
+          var oldstr = document.body.innerHTML;
+
+          document.body.innerHTML = headstr + bodystr + footstr;
+          pagesetup_null();
+          window.print();
+          //pagesetup_default();
+         // document.body.innerHTML = oldstr;
+          return false;
+        }
+
+        var hkey_root,hkey_path,hkey_key
+        hkey_root="HKEY_CURRENT_USER"
+        hkey_path="\\Software\\Microsoft\\Internet Explorer\\PageSetup\\"
+        //设置网页打印的页眉页脚为空
+        function pagesetup_null(){
+            try{
+                var RegWsh = new ActiveXObject("WScript.Shell")
+                hkey_key="header"
+                RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"")
+                hkey_key="footer"
+                RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"")
+            }catch(e){}
+        }
+        //设置网页打印的页眉页脚为默认值
+        function pagesetup_default(){
+            try{
+                var RegWsh = new ActiveXObject("WScript.Shell")
+                hkey_key="header"
+                RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"&w&b页码，&p/&P")
+                hkey_key="footer"
+                RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"&u&b&d")
+            }catch(e){}
+        }
+    $(document).ready(function(){
+        var id = "{$id}";
+        $("#mb").change(function(){
+           var mb = $('#mb').val();
+           if(mb){
+               order_dayin(id,mb);
+           }
+        });
+    });
+    </script>
+<div class="tips mb8 noprint">您当前的位置：<a href="{func admin_url order}" title="运单管理">运单列表</a>&raquo; 运单打印</div>
+<div id="div_print">
+{if($mb=='kjkd')}
+<table width="408" height="584" border="0" cellspacing="1" cellpadding="1" style="background:url('css/images/kjkd.png') no-repeat; margin: 0 auto;">
+        <tr>
+            <td width="130" height="35">&nbsp;</td>
+            <td width="171">&nbsp;</td>
+            <td width="97">&nbsp;</td>
+        </tr>
+        <tr>
+            <td height="45" colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td height="33" colspan="2">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="top"><table width="100%" border="0" cellspacing="1" cellpadding="1">
+                <tr>
+                    <td width="24" height="57">&nbsp;</td>
+                    <td width="91%">{$address.fullname}&nbsp;&nbsp;&nbsp;&nbsp;{$address.mobile}&nbsp;&nbsp;&nbsp;&nbsp;{$address.tel}<br />
+                        {$address.province}
+                        <!-- if $address.province != $address.city -->
+                        {$address.city}
+                        <!-- /if -->
+                        {$address.county}{$address.address}</td>
+                </tr>
+                <tr>
+                    <td height="41">&nbsp;</td>
+                    <td>{$rs.consignor}&nbsp;&nbsp;&nbsp;&nbsp;{$rs.consignor_tel}&nbsp;&nbsp;&nbsp;&nbsp;{$rs.consignor_address}</td>
+                </tr>
+            </table></td>
+            <td valign="top"></td>
+        </tr>
+        <tr>
+            <td height="81" colspan="3" align="center" valign="top"><img src="plugins/barcode/test_1D.php?text={$rs.sn}" height="60"></td>
+        </tr>
+        <tr>
+            <td height="53" colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+            <td height="226" colspan="3" valign="top">
+                <table width="100%" border="0" cellspacing="1" cellpadding="1">
+                    <tr>
+                        <td height="44" colspan="2">
+                            <table width="100%" border="0" cellspacing="1" cellpadding="1">
+                                <tr>
+                                    <td width="32%">&nbsp;</td>
+                                    <td width="68%" align="center" valign="bottom"><img src="plugins/barcode/test_1D.php?text={$rs.sn}" height="35"></td>
+                                </tr>
+                            </table></td>
+                    </tr>
+                    <tr>
+                        <td height="84" valign="top"><table width="100%" border="0" cellspacing="1" cellpadding="1">
+                            <tr>
+                                <td width="22" height="41">&nbsp;</td>
+                                <td width="286">{$address.fullname}&nbsp;&nbsp;&nbsp;&nbsp;{$address.mobile}&nbsp;&nbsp;&nbsp;&nbsp;{$address.tel}<br />
+                                    {$address.province}
+                                    <!-- if $address.province != $address.city -->
+                                    {$address.city}
+                                    <!-- /if -->
+                                    {$address.county}{$address.address}</td>
+                            </tr>
+                            <tr>
+                                <td height="37">&nbsp;</td>
+                                <td>{$rs.consignor}&nbsp;&nbsp;&nbsp;&nbsp;{$rs.consignor_tel}&nbsp;&nbsp;&nbsp;&nbsp;{$rs.consignor_address}</td>
+                            </tr>
+                        </table></td>
+                        <td width="75">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="89" colspan="2" style="padding-left:10px;">
+                            <!-- loop from=$product key=$key value=$value -->
+                            物品：{$value.title}　数量：{$value.qty}；
+                            <!-- /loop --></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+</table>
+{else}
+<div class="w661">
+    <div class="form">
+        <div class="form_n">
+            <div class="form_na">
+                <div class="formA">
+                    <div class="formA_1"><b>FROM</b></div>
+                    <div class="formA_2">{$rs.consignor_tel}</div>
+                </div>
+                <div class="formA formA1">
+                    姓名：{$rs.consignor}
+                </div>
+                <div class="formA formA1">
+
+                </div>
+            </div>
+
+            <div class="form_nb">
+                <div class="formB">
+                    <div class="formB_1">Ship Date</div>
+                    <div class="formB_2">{func date "Y-m-d" $rs.addtime}</div>
+                </div>
+                <div class="formB">
+                    <div class="formB_1">weight(1bs)</div>
+                    <div class="formB_3">{$rs.weight}</div>
+                    <div class="formB_4"></div>
+                </div>
+                <div class="formB">
+                    <div class="formB_1">weight(kg)</div>
+                    <div class="formB_3">&nbsp</div>
+                    <div class="formB_5">Claimed value(￥)</div>
+                    <div class="formB_6">{$rs.price}</div>
+                </div>
+            </div>
+        </div>
+        <div class="formC">
+            {$rs.consignor_address}
+        </div>
+
+        <div class="formC">
+            美国
+        </div>
+
+        <div class="formD">
+            <div class="formD_1"><b>SHIP<br />TO:</b></div>
+            <div class="formD_2">{$address.mobile}{$address.tel ? ' / '.$address.tel :'' } </div>
+        </div>
+        <div class="formC">
+            姓名：{$address.fullname}
+        </div>
+
+        <div class="formC">
+            {$address.country} &nbsp;&nbsp;&nbsp; {$address.province} &nbsp;&nbsp;&nbsp; <!-- if $address.province != $address.city -->{$address.city}<!-- /if --> &nbsp;&nbsp;&nbsp; {$address.county}{$address.address}
+        </div>
+        <div class="formD">
+            <div class="formD_1">邮编<br />编码</div>
+            <div class="formD_2"></div>
+        </div>
+        <div class="formC">
+            包裹物品明细：
+        </div>
+        <div class="formE">
+            <!-- loop from=$product key=$key value=$value -->
+            {$value.brand}{$value.title}{$value.qty}{$value.unit}；
+            <!-- /loop -->
+        </div>
+        <div class="formF">
+            <img src="plugins/barcode/test_1D.php?text={$rs.sn}" width="300" height="80" />
+        </div>
+    </div>
+</div>
+{/if}
+<div class="clear"></div>
+</div>
+<table width="350" border="0" align="center" cellpadding="0" cellspacing="0" class="table" style="margin:20px auto;">
+    <tr>
+       <td>选择打印模板：
+             <select name="mb" id="mb">
+                <option value="">选择打印模板</option>
+                <option value="kykd"{if($mb=='kykd')} selected{/if}>可逸快递</option>
+                <option value="kjkd"{if($mb=='kjkd')} selected{/if}>快捷快递</option>
+             </select>
+       </td>
+       <td><input type="button" onClick="UserPrint();" value="打 印" class="submit2"></td>
+    </tr>
+</table>
+<!-- include tpl=foot -->

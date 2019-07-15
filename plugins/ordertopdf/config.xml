@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<title>PDF订单生成</title>
+	<desc>将订单详细页生成PDF</desc>
+	<author>dsyex</author>
+	<version>1.0</version>
+</root>

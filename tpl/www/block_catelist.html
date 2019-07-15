@@ -1,0 +1,7 @@
+<div class="news-tt-left">{$page_rs.title}</div>
+<ul>
+    <!-- catelist pid=$page_rs.id cateid=$page_rs.cate -->
+    <!-- loop from=$list.sublist key=$key value=$value id=list_id -->
+    <li{if $cate_rs.id == $value.id} class="active"{/if}><a href="{$value.url}"><i class="nav01 nav0{$list_id.index+5}"></i>{$value.title}</a></li>
+    <!-- /loop -->
+</ul>

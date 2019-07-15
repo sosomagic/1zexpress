@@ -1,0 +1,49 @@
+<!-- inc:head -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{url ctrl=admin/}">后台主页</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>{if $id=='loginext'}快捷登录{else}微信{/if}设置</span>
+        </li>
+    </ul>
+    <!-- if $id=='weixin' -->
+    <div class="pull-right" style="margin-top: 5px;margin-right: 10px;margin-bottom: 5px;">
+        <a class="btn green" href="{echo admin_url('wechat','index')}">微信菜单</a>
+    </div>
+    <!-- /if -->
+</div>
+<form method="post" action="{echo admin_url('plugin','save')}">
+    <input type="hidden" id="id" name="id" value="{$id}" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box grey">
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-right col-md-2">插件名称：</td>
+                            <td><input id="title" name="title" value="{$rs.title}" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">备注：</td>
+                            <td><input id="note" name="note" value="{$rs.note}" class="form-control"/></td>
+                        </tr>
+                        {$plugin_html}
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button class="btn blue" type="submit">
+                            <i class="fa fa-edit"></i>
+                            提 交
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="{func include_js plugin.js}"></script>
+<!-- inc:foot -->

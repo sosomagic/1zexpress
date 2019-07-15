@@ -1,0 +1,28 @@
+<!-- inc:head -->
+<script type="text/javascript" src="{func add_js order.js}"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<div class="tips">
+    您当前位置：<a href="{url ctrl=order /}" title="">运单管理</a> &raquo; 批量发货
+    <div class="action"><a href="{url ctrl=order /}">运单列表</a></div>
+</div>
+<table width="100%" class="list" cellpadding="0" cellspacing="0">
+    <tr>
+        <th class="lft">&nbsp;&nbsp;批次名称</th>
+        <th class="lft">发货状态</th>
+        <th class="lft">备注</th>
+        <th width="80">操作</th>
+    </tr>
+    <!-- loop from=$batch_list key=$key value=$value -->
+    <tr>
+        <td>&nbsp;&nbsp;<a href="{url ctrl=order func=index cid=$value.id /}">{$value.title}</a></td>
+        <td>{$value.log.note}</td>
+        <td>{$value.note}</td>
+        <td align="center">
+            <div class="button-group">
+                <input type="button" value="更新发货状态" onclick="order_batch('{$value.id}','{$value.list.channel}','{$value.title}')" class="dsy-btn2" />
+            </div>
+        </td>
+    </tr>
+    <!-- /loop -->
+</table>
+<!-- inc:foot -->

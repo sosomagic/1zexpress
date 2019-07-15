@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<user>会员名</user>
+    <ucode>会员编号</ucode>
+	<group_id>会员等级</group_id>
+	<email>邮箱</email>
+</root>

@@ -1,0 +1,25 @@
+<!-- include tpl=head_open -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey">
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <tbody>
+                    <tr>
+                        <!-- loop from=$web key=$key value=$value -->
+                        <td class="text-center"><img src="{$value.filename}" title="{$value.title}" width="260" height="100">
+                            <br>
+                            {$value.title}
+                        </td>
+                        <!-- if ($key+1)%4==0 -->
+                        </tr>
+                        <!-- /if -->
+                        <!-- /loop -->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inc:foot_open -->
